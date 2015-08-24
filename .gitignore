@@ -1,5 +1,6 @@
 #add the mac store ignorance
 .DS_Store
+*.prefx
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
