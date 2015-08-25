@@ -1,0 +1,5 @@
+eclipse.preferences.version=1
+encoding//com/ericsson/xn/server/common/CommonFunc.py=utf-8
+encoding//com/ericsson/xn/server/common/CusProtocols.py=utf-8
+encoding/sshsimpleserver.py=utf-8
+encoding/startserver.py=utf-8
