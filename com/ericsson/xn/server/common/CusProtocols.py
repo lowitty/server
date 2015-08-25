@@ -5,11 +5,17 @@ protocol_log = logging.getLogger('server.SshCusProtocol')
 protocol_log.info('SSH Protocol Class start to log.')
 
 from twisted.conch import recvline
+import sys, os
 
 class SshCusProtocol(recvline.HistoricRecvLine):
     def __init__(self, user):
         protocol_log.info('SSH Protocal Class inited.')
         self.user = user
+        
+        pkg_path = 'com' + os.path.sep + 'ericsson' + os.path.sep + 'xn' + os.path.sep + 'server' + os.path.sep + 'common'
+        pardir = os.path.dirname(os.path.abspath(__file__)).split(pkg_path)[0]
+        
+        
         self.propt = "HelloWorld "
     
     def connectionMade(self):
@@ -26,7 +32,8 @@ class SshCusProtocol(recvline.HistoricRecvLine):
         return getattr(self, 'do_' + cmd, None)
 
     def lineReceived(self, line):
-        protocol_log.info('Recieved a command.')
+        print os.path.dirname(os.path.abspath(__file__)).split('com' + os.path.sep)
+        protocol_log.info(os.path.dirname(os.path.abspath(__file__)))
         line = line.strip()
         if line:
             cmdAndArgs = line.split()
@@ -55,7 +62,7 @@ class SshCusProtocol(recvline.HistoricRecvLine):
 
         publicMethods = filter(lambda funcname: funcname.startswith('do_'), dir(self))
         commands = [cmd.replace('do_', '', 1) for cmd in publicMethods]
-        self.terminal.write("Commands: " + " ".join(commands))
+        self.terminal.write("Commands: \n" + "\n".join(commands))
         self.terminal.nextLine()
 
     def do_quit(self):
