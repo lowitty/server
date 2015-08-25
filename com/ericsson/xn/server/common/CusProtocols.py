@@ -1,9 +1,16 @@
 #encoding=utf-8
+import logging
+protocol_log = logging.getLogger('server.SshCusProtocol')
+
+protocol_log.info('SSH Protocol Class start to log.')
+
 from twisted.conch import recvline
 
 class SshCusProtocol(recvline.HistoricRecvLine):
     def __init__(self, user):
+        protocol_log.info('SSH Protocal Class inited.')
         self.user = user
+        self.propt = "HelloWorld "
     
     def connectionMade(self):
         recvline.HistoricRecvLine.connectionMade(self)
@@ -13,12 +20,13 @@ class SshCusProtocol(recvline.HistoricRecvLine):
         self.showPrompt()
     
     def showPrompt(self):
-        self.terminal.write("$ ")
+        self.terminal.write(self.propt + "$ ")
 
     def getCommandFunc(self, cmd):
         return getattr(self, 'do_' + cmd, None)
 
     def lineReceived(self, line):
+        protocol_log.info('Recieved a command.')
         line = line.strip()
         if line:
             cmdAndArgs = line.split()
