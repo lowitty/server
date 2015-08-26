@@ -1,18 +1,18 @@
 <?xml version='1.0' encoding='utf-8'?>
 <node>
-	<nodeid>2222</nodeid>
+	<nodeid>3434</nodeid>
 	<x1neip>133.122.10.10</x1neip>
 	<x1neport>3000</x1neport>
 	<tx1normal>10</tx1normal>
 	<tx1nomsg>10</tx1nomsg>
 	<x2neip>133.122.10.10</x2neip>
-	<x2neport>3001</x2neport>
+	<x2neport>3003</x2neport>
 	<tx2normal>10</tx2normal>
 	<tx2checkstate>10</tx2checkstate>
 	<cputhreshhold>50</cputhreshhold>
 	<maxtargets>10000</maxtargets>
 	<lionoff>on</lionoff>
-	<licids>1000,8000,3000,5000,4000,7000,6000,2000</licids>
+	<licids>1000,8000</licids>
 	<lic>
 		<id>1000</id>
 		<x1ki>0123456701234567</x1ki>
@@ -27,78 +27,6 @@
 	</lic>
 	<lic>
 		<id>8000</id>
-		<x1ki>0123456701234567</x1ki>
-		<x1password>0123456701234567</x1password>
-		<x1sqn>1234</x1sqn>
-		<x1licip>139.135.10.10</x1licip>
-		<x1licport>2999</x1licport>
-		<x2ki>0123456701234567</x2ki>
-		<x2password>0123456701234567</x2password>
-		<x2sqn>1234</x2sqn>
-		<x2licaddrs>139.122.10.31:1234,139.122.10.31:1235</x2licaddrs>
-	</lic>
-	<lic>
-		<id>3000</id>
-		<x1ki>0123456701234567</x1ki>
-		<x1password>0123456701234567</x1password>
-		<x1sqn>1234</x1sqn>
-		<x1licip>139.135.10.10</x1licip>
-		<x1licport>2999</x1licport>
-		<x2ki>0123456701234567</x2ki>
-		<x2password>0123456701234567</x2password>
-		<x2sqn>1234</x2sqn>
-		<x2licaddrs>139.122.10.31:1234,139.122.10.31:1235</x2licaddrs>
-	</lic>
-	<lic>
-		<id>5000</id>
-		<x1ki>0123456701234567</x1ki>
-		<x1password>0123456701234567</x1password>
-		<x1sqn>1234</x1sqn>
-		<x1licip>139.135.10.10</x1licip>
-		<x1licport>2999</x1licport>
-		<x2ki>0123456701234567</x2ki>
-		<x2password>0123456701234567</x2password>
-		<x2sqn>1234</x2sqn>
-		<x2licaddrs>139.122.10.31:1234,139.122.10.31:1235</x2licaddrs>
-	</lic>
-	<lic>
-		<id>4000</id>
-		<x1ki>0123456701234567</x1ki>
-		<x1password>0123456701234567</x1password>
-		<x1sqn>1234</x1sqn>
-		<x1licip>139.135.10.10</x1licip>
-		<x1licport>2999</x1licport>
-		<x2ki>0123456701234567</x2ki>
-		<x2password>0123456701234567</x2password>
-		<x2sqn>1234</x2sqn>
-		<x2licaddrs>139.122.10.31:1234,139.122.10.31:1235</x2licaddrs>
-	</lic>
-	<lic>
-		<id>7000</id>
-		<x1ki>0123456701234567</x1ki>
-		<x1password>0123456701234567</x1password>
-		<x1sqn>1234</x1sqn>
-		<x1licip>139.135.10.10</x1licip>
-		<x1licport>2999</x1licport>
-		<x2ki>0123456701234567</x2ki>
-		<x2password>0123456701234567</x2password>
-		<x2sqn>1234</x2sqn>
-		<x2licaddrs>139.122.10.31:1234,139.122.10.31:1235</x2licaddrs>
-	</lic>
-	<lic>
-		<id>6000</id>
-		<x1ki>0123456701234567</x1ki>
-		<x1password>0123456701234567</x1password>
-		<x1sqn>1234</x1sqn>
-		<x1licip>139.135.10.10</x1licip>
-		<x1licport>2999</x1licport>
-		<x2ki>0123456701234567</x2ki>
-		<x2password>0123456701234567</x2password>
-		<x2sqn>1234</x2sqn>
-		<x2licaddrs>139.122.10.31:1234,139.122.10.31:1235</x2licaddrs>
-	</lic>
-	<lic>
-		<id>2000</id>
 		<x1ki>0123456701234567</x1ki>
 		<x1password>0123456701234567</x1password>
 		<x1sqn>1234</x1sqn>

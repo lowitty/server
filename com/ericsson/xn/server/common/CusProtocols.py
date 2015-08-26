@@ -71,18 +71,21 @@ class SshCusProtocol(recvline.HistoricRecvLine):
 
     def handler_ocgs(self, line):
         if('x_view_conf' == line):
+            protocol_log.info('ocgs setting action with command: ' + line)
             nodeinfo = OcgsNodeInfo(self.nodexml)
             info = nodeinfo.getNodeInfo()
             self.terminal.write(info)
             self.terminal.nextLine()
             protocol_log.info('Success execute the getting command: ' + info.replace("\n", " | "))
         elif(line.startswith('x_modify_conf')):
+            protocol_log.info('ocgs getting action with command: ' + line)
             handler = OcgsSetValue(line, self.nodexml)
             info = handler.returnRes()
             self.terminal.write(info)
             self.terminal.nextLine()
             protocol_log.info('Success execute the getting command: ' + info)
         elif(line.startswith("ocgslic")):
+            protocol_log.info('ocgs add or remove LIC with command: ' + line)
             handler = OcgsLicAddRemove(line, self.nodexml)
             info = handler.getRes()
             self.terminal.write(info)
@@ -90,7 +93,7 @@ class SshCusProtocol(recvline.HistoricRecvLine):
             protocol_log.info('Success execute the add/remove action: ' + info)
         else:
             protocol_log.error('Unkown command found.')
-            self.terminal.write("result=failed\nerrordesc=Command un-supported!")
+            self.terminal.write("result=failed\nerrordesc=Command Un-supported!")
             self.terminal.nextLine()
 
     def do_help(self, cmd=''):

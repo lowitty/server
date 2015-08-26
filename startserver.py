@@ -99,6 +99,6 @@ if __name__ == '__main__':
                 portal.registerChecker(sshDB)
                 TwFactory.portal = portal
                 server_log.debug('Bind server listener at port: ' + str(iPort) + ' and bind to host: ' + host + '.')
-                reactor.listenTCP(interface="0.0.0.0", port=2222, factory=TwFactory())
+                reactor.listenTCP(interface=host, port=iPort, factory=TwFactory())
                 server_log.debug('Try to start the server.')
                 reactor.run()
