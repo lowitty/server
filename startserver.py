@@ -41,18 +41,19 @@ from twisted.conch.checkers import SSHPublicKeyChecker, InMemorySSHKeyDB
 from twisted.conch.ssh import keys
 from twisted.internet import reactor
 from com.ericsson.xn.server.prop.PyProperties import Properties
+from bs4 import BeautifulSoup
 
 publicKey = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAGEArzJx8OYOnJmzf4tfBEvLi8DVPrJ3/c9k2I/Az64fxjHf9imyRJbixtQhlH9lfNjUIx+4LmrJH5QNRsFporcHDKOTwTTYLh5KmRpslkYHRivcJSkbh/C+BR3utDS555mV'
 
 if __name__ == '__main__':
-    if(len(sys.argv) < 2):
-        server_log.critical('Please feed the node configuration name as parameter.')
+    if(len(sys.argv) < 3):
+        server_log.critical('Please feed the node type and node configuration name as parameter.')
     else:
-        cfg_path = pardir + os.path.sep + 'config' + os.path.sep + str(sys.argv[1]).strip()
-        if(not os.path.isdir(cfg_path) or not os.path.isfile(cfg_path + os.path.sep + str(sys.argv[1]).strip() + ".properties")):
+        cfg_path = pardir + os.path.sep + 'config' + os.path.sep + str(sys.argv[2]).strip()
+        if(not os.path.isdir(cfg_path) or not os.path.isfile(cfg_path + os.path.sep + str(sys.argv[2]).strip() + ".properties")):
             server_log.error('The configuration file that you have specified does not exist!')
         else:
-            cfg_file = os.path.normpath(cfg_path + os.path.sep + str(sys.argv[1]).strip() + ".properties")
+            cfg_file = os.path.normpath(cfg_path + os.path.sep + str(sys.argv[2]).strip() + ".properties")
             server_log.info('Get properties from the configuration file: ' + cfg_file + '. ')
             p = Properties(cfg_file)
             username = p.getProperty('username')

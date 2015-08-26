@@ -1,11 +1,16 @@
 #encoding=utf-8
 import logging
+from __builtin__ import getattr
 protocol_log = logging.getLogger('server.SshCusProtocol')
 
 protocol_log.info('SSH Protocol Class start to log.')
 
 from twisted.conch import recvline
 import sys, os
+from com.ericsson.xn.server.prop.PyProperties import Properties
+from com.ericsson.xn.server.parser.OcgsParser import OcgsNodeInfo
+
+print sys.path
 
 class SshCusProtocol(recvline.HistoricRecvLine):
     def __init__(self, user):
@@ -13,10 +18,16 @@ class SshCusProtocol(recvline.HistoricRecvLine):
         self.user = user
         
         pkg_path = 'com' + os.path.sep + 'ericsson' + os.path.sep + 'xn' + os.path.sep + 'server' + os.path.sep + 'common'
-        pardir = os.path.dirname(os.path.abspath(__file__)).split(pkg_path)[0]
-        
-        
-        self.propt = "HelloWorld "
+        self.pardir = os.path.dirname(os.path.abspath(__file__)).split(pkg_path)[0]
+        prop_file = self.pardir + 'config' + os.path.sep + str(sys.argv[2]).strip() + os.path.sep + str(sys.argv[2]).strip() + '.properties'
+        protocol_log.info('Property file path: ' + prop_file)
+        p = Properties(prop_file)
+        self.prompt = p.getProperty('prompt')
+        self.nodeType = str(sys.argv[1]).strip()
+        self.nodexml = self.pardir  + 'config' + os.path.sep + str(sys.argv[2]).strip() + os.path.sep + str(sys.argv[2]).strip() + '_node1.xml'
+        if(not os.path.isfile(self.nodexml)):
+            protocol_log.error('The node XML configuration file does not exist! XML Path: ' + self.nodexml)
+            raise StandardError('Unable to find the NODE XML Configuration file.')
     
     def connectionMade(self):
         recvline.HistoricRecvLine.connectionMade(self)
@@ -26,14 +37,12 @@ class SshCusProtocol(recvline.HistoricRecvLine):
         self.showPrompt()
     
     def showPrompt(self):
-        self.terminal.write(self.propt + "$ ")
+        self.terminal.write(self.prompt)
 
     def getCommandFunc(self, cmd):
         return getattr(self, 'do_' + cmd, None)
 
     def lineReceived(self, line):
-        print os.path.dirname(os.path.abspath(__file__)).split('com' + os.path.sep)
-        protocol_log.info(os.path.dirname(os.path.abspath(__file__)))
         line = line.strip()
         if line:
             cmdAndArgs = line.split()
@@ -47,9 +56,24 @@ class SshCusProtocol(recvline.HistoricRecvLine):
                     self.terminal.write("Error: %s" % e)
                     self.terminal.nextLine()
             else:
-                self.terminal.write("No such command.")
-                self.terminal.nextLine()
+                #check that the given type of node is supported or not
+                nodeHandler = getattr(self, 'handler_' + self.nodeType, None)
+                if(nodeHandler):
+                    nodeHandler(line)
+                else:
+                    self.terminal.write('The node type you specified does not support, NodeType: ' + self.nodeType)
+                    self.terminal.nextLine()
         self.showPrompt()
+
+    def handler_ocgs(self, line):
+        if('x_view_conf' == line):
+            nodeinfo = OcgsNodeInfo(self.nodexml)
+            info = nodeinfo.getNodeInfo()
+            self.terminal.write(info)
+            self.terminal.nextLine()
+            protocol_log.info('Success get all the configuration values: ' + info)
+        else:
+            pass
 
     def do_help(self, cmd=''):
         "Get help on a command. Usage: help command"
@@ -61,8 +85,11 @@ class SshCusProtocol(recvline.HistoricRecvLine):
                 return
 
         publicMethods = filter(lambda funcname: funcname.startswith('do_'), dir(self))
+        handlerMethods = filter(lambda funcname: funcname.startswith('handler_'), dir(self))
         commands = [cmd.replace('do_', '', 1) for cmd in publicMethods]
-        self.terminal.write("Commands: \n" + "\n".join(commands))
+        cmd_hanlder =  [cmd.replace('handler_', '', 1) for cmd in handlerMethods]
+        
+        self.terminal.write("Commands: \n" + "\n".join(commands) + "\nNode handlers: \n" + "\n".join(cmd_hanlder))
         self.terminal.nextLine()
 
     def do_quit(self):
