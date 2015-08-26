@@ -35,7 +35,7 @@ class SshCusProtocol(recvline.HistoricRecvLine):
     
     def connectionMade(self):
         recvline.HistoricRecvLine.connectionMade(self)
-        self.terminal.write("Welcome to my test SSH server.")
+        self.terminal.write("Welcome to SSH Server, this server is supposed to be used for simulator is E///.")
         self.terminal.nextLine()
         self.do_help()
         self.showPrompt()

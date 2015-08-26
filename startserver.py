@@ -19,14 +19,15 @@ log_handler = RotatingFileHandler(log_file, mode='a', maxBytes=10*1024*1024, bac
 log_handler.setFormatter(log_formatter)
 log_handler.setLevel(logging.DEBUG)
 
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.DEBUG)
-
 server_log = logging.getLogger('server')
 server_log.setLevel(logging.DEBUG)
 
 server_log.addHandler(log_handler)
-server_log.addHandler(console_handler)
+
+if(len(sys.argv) > 3 and 'consolelog' == sys.argv[3]):
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.DEBUG)
+    server_log.addHandler(console_handler)
 
 server_log.info('********************************************************************************************')
 
