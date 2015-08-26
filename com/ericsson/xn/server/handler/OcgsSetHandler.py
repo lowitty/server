@@ -212,7 +212,7 @@ class OcgsLicAddRemove():
         return False
     
     def getRes(self):
-        return self.res
+        return self.res.rstrip().encode('utf-8')
 
 '''xmlpath = '/Users/lowitty/git/server/config/ocgs/ocgs_node1.xml'
 e = OcgsLicAddRemove("ocgslicremoveone", xmlpath)
