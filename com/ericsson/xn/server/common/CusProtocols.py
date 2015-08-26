@@ -9,8 +9,8 @@ from twisted.conch import recvline
 import sys, os
 from com.ericsson.xn.server.prop.PyProperties import Properties
 from com.ericsson.xn.server.parser.OcgsParser import OcgsNodeInfo
-
-print sys.path
+from com.ericsson.xn.server.handler.OcgsSetHandler import OcgsSetValue
+#print sys.path
 
 class SshCusProtocol(recvline.HistoricRecvLine):
     def __init__(self, user):
@@ -28,6 +28,10 @@ class SshCusProtocol(recvline.HistoricRecvLine):
         if(not os.path.isfile(self.nodexml)):
             protocol_log.error('The node XML configuration file does not exist! XML Path: ' + self.nodexml)
             raise StandardError('Unable to find the NODE XML Configuration file.')
+        
+        self.addhelp = ""
+        if(self.nodeType == 'ocgs'):
+            self.addhelp = "x_view_conf\nx_modify_conf [-nodepara value] [-licid id] [-licpara value]"
     
     def connectionMade(self):
         recvline.HistoricRecvLine.connectionMade(self)
@@ -71,9 +75,13 @@ class SshCusProtocol(recvline.HistoricRecvLine):
             info = nodeinfo.getNodeInfo()
             self.terminal.write(info)
             self.terminal.nextLine()
-            protocol_log.info('Success get all the configuration values: ' + info)
+            protocol_log.info('Success execute the getting command: ' + info.replace("\n", " | "))
         else:
-            pass
+            handler = OcgsSetValue(line, self.nodexml)
+            info = handler.returnRes()
+            self.terminal.write(info)
+            self.terminal.nextLine()
+            protocol_log.info('Success execute the getting command: ' + info)
 
     def do_help(self, cmd=''):
         "Get help on a command. Usage: help command"
@@ -89,7 +97,7 @@ class SshCusProtocol(recvline.HistoricRecvLine):
         commands = [cmd.replace('do_', '', 1) for cmd in publicMethods]
         cmd_hanlder =  [cmd.replace('handler_', '', 1) for cmd in handlerMethods]
         
-        self.terminal.write("Commands: \n" + "\n".join(commands) + "\nNode handlers: \n" + "\n".join(cmd_hanlder))
+        self.terminal.write("Commands: \n" + "\n".join(commands) + "\nNode handlers: \n" + "\n".join(cmd_hanlder) + "\n" + self.addhelp)
         self.terminal.nextLine()
 
     def do_quit(self):

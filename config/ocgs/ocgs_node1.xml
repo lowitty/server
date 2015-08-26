@@ -1,14 +1,14 @@
 <?xml version='1.0' encoding='utf-8'?>
 <node>
-	<nodeid>3355</nodeid>
+	<nodeid>5555</nodeid>
 	<x1neip>133.122.10.10</x1neip>
 	<x1neport>3000</x1neport>
 	<tx1normal>10</tx1normal>
 	<tx1nomsg>10</tx1nomsg>
 	<x2neip>133.122.10.10</x2neip>
-	<x2neport>3001</x2neport>
+	<x2neport>3333</x2neport>
 	<tx2normal>10</tx2normal>
-	<tx2checkstate>10</tx2checkstate>
+	<tx2checkstate>20</tx2checkstate>
 	<cputhreshhold>50</cputhreshhold>
 	<maxtargets>10000</maxtargets>
 	<lionoff>on</lionoff>
@@ -16,8 +16,8 @@
 	<lic>
 		<id>8000</id>
 		<x1ki>0123456701234567</x1ki>
-		<x1password>0123456701234567</x1password>
-		<x1sqn>1234</x1sqn>
+		<x1password>1234567898765</x1password>
+		<x1sqn>2222</x1sqn>
 		<x1licip>139.135.10.10</x1licip>
 		<x1licport>2999</x1licport>
 		<x2ki>0123456701234567</x2ki>
@@ -29,12 +29,12 @@
 		<id>9000</id>
 		<x1ki>0123456701234567</x1ki>
 		<x1password>0123456701234567</x1password>
-		<x1sqn>1234</x1sqn>
+		<x1sqn>4321</x1sqn>
 		<x1licip>139.135.10.10</x1licip>
 		<x1licport>3333</x1licport>
 		<x2ki>0123456701234567</x2ki>
 		<x2password>0123456701234567</x2password>
-		<x2sqn>1234</x2sqn>
+		<x2sqn>4321</x2sqn>
 		<x2licaddrs>139.122.10.31:1234,139.122.10.31:1235</x2licaddrs>
 	</lic>
 </node>

@@ -48,6 +48,9 @@ class TwAvatar(avatar.ConchUser):
     def closed(self):
         pass
     
+    def windowChanged(self, argvs):
+        pass
+    
 class TwRealm:
     implements(portal.IRealm)
     
