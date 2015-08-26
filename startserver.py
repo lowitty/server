@@ -38,7 +38,7 @@ if('Linux' == platform.system()):
 elif('Darwin' == platform.system()):
     libstype = "libsDarwin"
 else:
-    server_log.critical("This program is surpposed to be run on OSX or Linux platforms, other platforms have not been tested!")
+    server_log.critical("This program is supposed to be run on OSX or Linux platforms, other platforms have not been tested!")
 
 sys.path.insert(0, os.path.join(pardir, libstype))
 
