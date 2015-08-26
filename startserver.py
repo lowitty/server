@@ -8,6 +8,7 @@ Created on Aug 24, 2015
 import sys, os
 import logging
 from logging.handlers import RotatingFileHandler
+from sshsimpleserver import passwdDB
 log_formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(module)s %(funcName)s(%(lineno)d) %(message)s')
 
 #get the root directory of the parent folder
@@ -36,7 +37,7 @@ from com.ericsson.xn.server.common.CommonFunc import TwRealm
 from com.ericsson.xn.server.common.CusProtocols import SshCusProtocol
 from com.ericsson.xn.server.common.CommonFunc import TwFactory
 from twisted.cred import portal
-from twisted.cred.checkers import InMemoryUsernamePasswordDatabaseDontUse
+from twisted.cred.checkers import InMemoryUsernamePasswordDatabaseDontUse, FilePasswordDB
 from twisted.conch.checkers import SSHPublicKeyChecker, InMemorySSHKeyDB
 from twisted.conch.ssh import keys
 from twisted.internet import reactor
@@ -56,12 +57,18 @@ if __name__ == '__main__':
             cfg_file = os.path.normpath(cfg_path + os.path.sep + str(sys.argv[2]).strip() + ".properties")
             server_log.info('Get properties from the configuration file: ' + cfg_file + '. ')
             p = Properties(cfg_file)
-            username = p.getProperty('username')
-            password = p.getProperty('password')
+            
+            #username = p.getProperty('username')
+            #password = p.getProperty('password')
+            
             host = p.getProperty('host')
             portno = p.getProperty('port')
-            if(username is None or password is None or host is None or portno is None):
-                server_log.error('The configuration file: ' + cfg_file + " need to provide username, password, host and port information.")
+            
+            #if(username is None or password is None or host is None or portno is None):
+            #    server_log.error('The configuration file: ' + cfg_file + " need to provide username, password, host and port information.")
+                
+            if(host is None or portno is None):
+                server_log.error('The configuration file: ' + cfg_file + " need to provide host and port information.")
             else:
                 try:
                     iPort = int(portno)
@@ -70,9 +77,13 @@ if __name__ == '__main__':
                     iPort = 22
                 
                 portal = portal.Portal(TwRealm(SshCusProtocol))
-                passwdDB = InMemoryUsernamePasswordDatabaseDontUse()
-                server_log.info('Add user with username: ' + username + ", password: " + password + ".")
-                passwdDB.addUser(username, password)
+                
+                #passwdDB = InMemoryUsernamePasswordDatabaseDontUse()
+                #server_log.info('Add user with username: ' + username + ", password: " + password + ".")
+                #passwdDB.addUser(username, password)
+                
+                passwdDB = FilePasswordDB(pardir + os.path.sep + "passwd" + os.path.sep + "passwddbfile")
+                
                 sshDB = SSHPublicKeyChecker(InMemorySSHKeyDB({'user': [keys.Key.fromString(data=publicKey)]}))
                 portal.registerChecker(passwdDB)
                 portal.registerChecker(sshDB)

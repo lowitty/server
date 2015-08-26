@@ -24,7 +24,7 @@ class SshCusProtocol(recvline.HistoricRecvLine):
         p = Properties(prop_file)
         self.prompt = p.getProperty('prompt')
         self.nodeType = str(sys.argv[1]).strip()
-        self.nodexml = self.pardir  + 'config' + os.path.sep + str(sys.argv[2]).strip() + os.path.sep + str(sys.argv[2]).strip() + '_node1.xml'
+        self.nodexml = self.pardir  + 'config' + os.path.sep + str(sys.argv[2]).strip() + os.path.sep + str(sys.argv[2]).strip() + '_node.xml'
         if(not os.path.isfile(self.nodexml)):
             protocol_log.error('The node XML configuration file does not exist! XML Path: ' + self.nodexml)
             raise StandardError('Unable to find the NODE XML Configuration file.')
