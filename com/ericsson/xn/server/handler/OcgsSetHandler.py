@@ -5,8 +5,7 @@ Created on Aug 26, 2015
 @author: lowitty
 '''
 import logging
-from xml.etree import ElementTree
-from scipy.sparse.linalg.eigen.arpack._arpack import sseupd
+from xml.etree import ElementTreeß
 log = logging.getLogger('server.OcgsSetValue')
 
 class OcgsSetValue():

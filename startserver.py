@@ -5,10 +5,9 @@ Created on Aug 24, 2015
 @author: lowitty
 '''
 #This will try to init the logger
-import sys, os
+import sys, os, platform
 import logging
 from logging.handlers import RotatingFileHandler
-from sshsimpleserver import passwdDB
 log_formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(module)s %(funcName)s(%(lineno)d) %(message)s')
 
 #get the root directory of the parent folder
@@ -32,17 +31,27 @@ server_log.addHandler(console_handler)
 server_log.info('********************************************************************************************')
 
 
-sys.path.insert(0, os.path.join(pardir, 'libs'))
+libstype = "libsLinux"
+
+if('Linux' == platform.system()):
+    libstype = "libsLinux"
+elif('Darwin' == platform.system()):
+    libstype = "libsDarwin"
+else:
+    server_log.critical("This program is surpposed to be run on OSX or Linux platforms, other platforms have not been tested!")
+
+sys.path.insert(0, os.path.join(pardir, libstype))
+
+
 from com.ericsson.xn.server.common.CommonFunc import TwRealm
 from com.ericsson.xn.server.common.CusProtocols import SshCusProtocol
 from com.ericsson.xn.server.common.CommonFunc import TwFactory
 from twisted.cred import portal
-from twisted.cred.checkers import InMemoryUsernamePasswordDatabaseDontUse, FilePasswordDB
+from twisted.cred.checkers import FilePasswordDB
 from twisted.conch.checkers import SSHPublicKeyChecker, InMemorySSHKeyDB
 from twisted.conch.ssh import keys
 from twisted.internet import reactor
 from com.ericsson.xn.server.prop.PyProperties import Properties
-from bs4 import BeautifulSoup
 
 publicKey = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAGEArzJx8OYOnJmzf4tfBEvLi8DVPrJ3/c9k2I/Az64fxjHf9imyRJbixtQhlH9lfNjUIx+4LmrJH5QNRsFporcHDKOTwTTYLh5KmRpslkYHRivcJSkbh/C+BR3utDS555mV'
 
