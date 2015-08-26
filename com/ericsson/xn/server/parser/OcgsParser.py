@@ -6,13 +6,13 @@ Created on Aug 26, 2015
 '''
 import xml.sax
 import logging
-log = logging.getLogger('server.OcgsParser')
+logOcgsParser = logging.getLogger('server.OcgsParser')
 
 
 class OcgsSaxHandler(xml.sax.ContentHandler):
     def __init__(self):
         xml.sax.ContentHandler.__init__(self)
-        log.info('SAX handler init.')
+        logOcgsParser.info('SAX handler init.')
         self.node = {}
         self.nodePara = {}
         self.lics = []
@@ -29,7 +29,7 @@ class OcgsSaxHandler(xml.sax.ContentHandler):
     def startElement(self, name, attrs):
         if('lic' == name):
             self.isLic = True
-            log.info('Found a lic information.')
+            logOcgsParser.info('Found a lic information.')
         self.key = name
     
     def characters(self, content):
@@ -54,7 +54,7 @@ class OcgsSaxHandler(xml.sax.ContentHandler):
     def endDocument(self):
         self.node["nodePara"] = self.nodePara
         self.node["lics"] = self.lics
-        log.info('End the parsing of XML.')
+        logOcgsParser.info('End the parsing of XML.')
 
 
 class OcgsNodeInfo():

@@ -4,6 +4,9 @@ Created on Aug 24, 2015
 
 @author: lowitty
 '''
+import logging
+logCommonFunc = logging.getLogger('server.CommonFunc')
+
 from twisted.cred import portal
 from twisted.conch import avatar, recvline, interfaces as conchinterfaces
 from twisted.conch.ssh import session, factory, keys, userauth, connection
@@ -49,6 +52,11 @@ class TwAvatar(avatar.ConchUser):
         pass
     
     def windowChanged(self, argvs):
+        logCommonFunc.warn('Terminal window size has been changed!')
+        pass
+    
+    def eofReceived(self):
+        logCommonFunc.warn('User manually close the ssh clent!')
         pass
     
 class TwRealm:

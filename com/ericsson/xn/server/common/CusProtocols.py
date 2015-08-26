@@ -9,7 +9,7 @@ from twisted.conch import recvline
 import sys, os
 from com.ericsson.xn.server.prop.PyProperties import Properties
 from com.ericsson.xn.server.parser.OcgsParser import OcgsNodeInfo
-from com.ericsson.xn.server.handler.OcgsSetHandler import OcgsSetValue
+from com.ericsson.xn.server.handler.OcgsSetHandler import OcgsSetValue, OcgsLicAddRemove
 #print sys.path
 
 class SshCusProtocol(recvline.HistoricRecvLine):
@@ -31,7 +31,7 @@ class SshCusProtocol(recvline.HistoricRecvLine):
         
         self.addhelp = ""
         if(self.nodeType == 'ocgs'):
-            self.addhelp = "x_view_conf\nx_modify_conf [-nodepara value] [-licid id] [-licpara value]"
+            self.addhelp = "x_view_conf\nx_modify_conf [-nodepara value] [-licid id] [-licpara value]\nocgslicaddone\nocgslicremoveone"
     
     def connectionMade(self):
         recvline.HistoricRecvLine.connectionMade(self)
@@ -76,12 +76,22 @@ class SshCusProtocol(recvline.HistoricRecvLine):
             self.terminal.write(info)
             self.terminal.nextLine()
             protocol_log.info('Success execute the getting command: ' + info.replace("\n", " | "))
-        else:
+        elif(line.startswith('x_modify_conf')):
             handler = OcgsSetValue(line, self.nodexml)
             info = handler.returnRes()
             self.terminal.write(info)
             self.terminal.nextLine()
             protocol_log.info('Success execute the getting command: ' + info)
+        elif(line.startswith("ocgslic")):
+            handler = OcgsLicAddRemove(line, self.nodexml)
+            info = handler.getRes()
+            self.terminal.write(info)
+            self.terminal.nextLine()
+            protocol_log.info('Success execute the add/remove action: ' + info)
+        else:
+            protocol_log.error('Unkown command found.')
+            self.terminal.write("result=failed\nerrordesc=Command un-supported!")
+            self.terminal.nextLine()
 
     def do_help(self, cmd=''):
         "Get help on a command. Usage: help command"
