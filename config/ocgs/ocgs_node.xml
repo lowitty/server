@@ -6,11 +6,11 @@
 	<tx1normal>10</tx1normal>
 	<tx1nomsg>10</tx1nomsg>
 	<x2neip>133.122.10.10</x2neip>
-	<x2neport>3003</x2neport>
+	<x2neport>3333</x2neport>
 	<tx2normal>10</tx2normal>
 	<tx2checkstate>10</tx2checkstate>
 	<cputhreshhold>50</cputhreshhold>
-	<maxtargets>10000</maxtargets>
+	<maxtargets>20000</maxtargets>
 	<lionoff>on</lionoff>
 	<licids>1000,8000</licids>
 	<lic>

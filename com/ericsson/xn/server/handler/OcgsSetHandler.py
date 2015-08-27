@@ -4,14 +4,18 @@ Created on Aug 26, 2015
 
 @author: lowitty
 '''
-import logging, time, random, copy
+import logging, time, random, copy, sys
 from xml.etree import ElementTree
 logOcgsSetValue = logging.getLogger('server.OcgsSetValue')
 isAvaiable = True
 
+versionTuple = sys.version_info[:2]
+version = '.'.join(repr(v) for v in versionTuple)
+
+
 class OcgsSetValue():
     def __init__(self, line, xmlpath):
-        global isAvaiable
+        global isAvaiable, version
         
         self.returnStr = ""
         self.nodePara = ["nodeid", "x1neip", "x1neport", "tx1normal", "tx1nomsg", "x2neip", "x2neport", "tx2normal", "tx2checkstate", "cputhreshhold", "maxtargets", "lionoff", "licids"]
@@ -23,14 +27,17 @@ class OcgsSetValue():
                     self.er = ElementTree.parse(xmlpath)
                     res = self.setValue(cmds)
                     if(res):
-                        self.er.write(xmlpath, encoding='utf-8', xml_declaration=True, method='xml')
+                        if('2.7' == version):
+                            self.er.write(xmlpath, encoding='utf-8', xml_declaration=True, method='xml')
+                        else:
+                            self.er.write(xmlpath, encoding='utf-8')
                         logOcgsSetValue.info('Successfully set the value to node.')
                         self.returnStr="result=successful"
                     else:
                         logOcgsSetValue.error('Try to modify the XML failed.')
                         self.returnStr="result=failed\nerrordesc=Try to modify the XML failed."
                 except Exception as e:
-                    logOcgsSetValue.error('Try to set the value to XML configuration file failed.')
+                    logOcgsSetValue.error('Try to set the value to XML configuration file failed.' + e.args)
                     self.returnStr="result=failed\nerrordesc=Try to set the value to XML configuration file failed."
                 finally:
                     isAvaiable = True
@@ -62,6 +69,7 @@ class OcgsSetValue():
                 self.er.find('./' + k).text = v
             return True
         except Exception as e:
+            logOcgsSetValue.error('Try to set node value error, msg: ' + e.args)
             return False
     
     def setLicValue(self, licinfo):
@@ -75,6 +83,7 @@ class OcgsSetValue():
                         lic.find(k).text = v
                     return True
                 except Exception as e:
+                    logOcgsSetValue.error('Try to set LIC value ERROR, msg: ' + e.args)
                     return False
             else:
                 logOcgsSetValue.error('The licid that you specified does not exist!')
@@ -146,7 +155,7 @@ class OcgsLicAddRemove():
     
     def __init__(self, line, xmlpath):
         line = line.strip()
-        global isAvaiable
+        global isAvaiable, version
         self.res = ""
         if(line not in ["ocgslicaddone", "ocgslicremoveone"]):
             self.res = "result=failed\nerrordesc=Command to add/remove LIC is in wrong format!"
@@ -173,7 +182,13 @@ class OcgsLicAddRemove():
                             copylic.find('id').text = id_text
                             licids.text = ",".join(i for i in licuds_true) + "," + id_text
                             er.getroot().append(copylic)
-                            er.write(xmlpath, encoding='utf-8', xml_declaration=True, method='xml')
+                            
+                            if('2.7' == version):
+                                er.write(xmlpath, encoding='utf-8', xml_declaration=True, method='xml')
+                            else:
+                                er.write(xmlpath, encoding='utf-8')
+                            
+                            #er.write(xmlpath, encoding='utf-8', xml_declaration=True, method='xml')
                             self.res = "result=successfully"
                             logOcgsSetValue.info('Successfully add a LIC.')
                         else:
@@ -185,7 +200,13 @@ class OcgsLicAddRemove():
                             er.getroot().remove(lastlic)
                             ids = ",".join(t.find('id').text for t in er.findall('./lic'))
                             er.find('./licids').text = ids
-                            er.write(xmlpath, encoding='utf-8', xml_declaration=True, method='xml')
+                            
+                            #er.write(xmlpath, encoding='utf-8', xml_declaration=True, method='xml')
+                            if('2.7' == version):
+                                er.write(xmlpath, encoding='utf-8', xml_declaration=True, method='xml')
+                            else:
+                                er.write(xmlpath, encoding='utf-8')
+                            
                             self.res = "result=successfully"
                             logOcgsSetValue.info('Successfully remove the last LIC.')
                         else:
@@ -193,7 +214,7 @@ class OcgsLicAddRemove():
                             logOcgsSetValue.error('There is only one LIC on the node now, cannot be removed any more.')
                 except Exception as e:
                     self.res = "result=failed\nerrordesc=Mostly is that the XML file format is bad."
-                    logOcgsSetValue.error('Mostly is that the XML file format is bad.')
+                    logOcgsSetValue.error('Mostly is that the XML file format is bad. msg: ' + e.args)
                 finally:
                     isAvaiable = True
             else:

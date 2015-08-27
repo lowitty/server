@@ -76,7 +76,7 @@ class OcgsNodeInfo():
                     if('id' != key):
                         self.nodeInfo += licid + "::" + key + "=" + value + "\n"
         except Exception as e:
-            self.nodeInfo = "result=failed\nerrordesc=failed to get config"
+            self.nodeInfo = "result=failed\nerrordesc=failed to get config, msg: " + e.args
         
     
     

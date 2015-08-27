@@ -83,7 +83,7 @@ if __name__ == '__main__':
                 try:
                     iPort = int(portno)
                 except Exception as e:
-                    server_log.warning('Unable to parse port NO. to integer, will use 22 as default port NO.')
+                    server_log.warning('Unable to parse port NO. to integer, will use 22 as default port NO. msg: ' + e.args)
                     iPort = 22
                 
                 portal = portal.Portal(TwRealm(SshCusProtocol))
