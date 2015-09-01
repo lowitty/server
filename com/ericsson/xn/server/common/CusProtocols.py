@@ -83,14 +83,14 @@ class SshCusProtocol(recvline.HistoricRecvLine):
             info = handler.returnRes()
             self.terminal.write(info)
             self.terminal.nextLine()
-            protocol_log.info('Success execute the getting command: ' + info)
+            protocol_log.info('Success execute the getting command: ' + info.replace("\n", " | "))
         elif(line.startswith("ocgslic")):
             protocol_log.info('ocgs add or remove LIC with command: ' + line)
             handler = OcgsLicAddRemove(line, self.nodexml)
             info = handler.getRes()
             self.terminal.write(info)
             self.terminal.nextLine()
-            protocol_log.info('Success execute the add/remove action: ' + info)
+            protocol_log.info('Success execute the add/remove action: ' + info.replace("\n", " | "))
         else:
             protocol_log.error('Unkown command found.')
             self.terminal.write("result=failed\nerrordesc=Command Un-supported!")
