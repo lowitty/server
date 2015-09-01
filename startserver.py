@@ -14,7 +14,13 @@ log_formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(module)s %(func
 pardir = os.path.dirname(os.path.abspath(__file__))
 
 
-log_file = pardir + os.path.sep + 'logs' + os.path.sep + 'server.log'
+log_dir = pardir + os.path.sep + 'logs'
+if(not os.path.isdir(log_dir)):
+    os.mkdir(log_dir)
+log_file = log_dir + os.path.sep + 'server.log'
+
+
+
 log_handler = RotatingFileHandler(log_file, mode='a', maxBytes=10*1024*1024, backupCount=10, encoding='utf-8', delay=0)
 log_handler.setFormatter(log_formatter)
 log_handler.setLevel(logging.DEBUG)
