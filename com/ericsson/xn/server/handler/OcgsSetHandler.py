@@ -18,7 +18,7 @@ class OcgsSetValue():
         global isAvaiable, version
         
         self.returnStr = ""
-        self.nodePara = ["nodeid", "x1neip", "x1neport", "tx1normal", "tx1nomsg", "x2neip", "x2neport", "tx2normal", "tx2checkstate", "cputhreshhold", "maxtargets", "lionoff", "licids"]
+        self.nodePara = ["nodeid", "x1neip", "x1neport", "tx1normal", "tx1nomsg", "x2neip", "x2neport", "tx2normal", "tx2checkstate", "cputhreshold", "maxtargets", "lionoff", "licids"]
         self.licPara = ["x1ki", "x1password", "x1sqn", "x1licip", "x1licport", "x2ki", "x2password", "x2sqn", "x2licaddrs"]
         res, cmds = self.checkCmdFormat(line)
         if(res):#Parameter check passed, will try to set the value to XML.
