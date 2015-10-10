@@ -9,7 +9,7 @@
 	<x2neport>3333</x2neport>
 	<tx2normal>10</tx2normal>
 	<tx2checkstate>10</tx2checkstate>
-	<cputhreshhold>50</cputhreshhold>
+	<cputhreshold>50</cputhreshold>
 	<maxtargets>20000</maxtargets>
 	<lionoff>on</lionoff>
 	<licids>1000,8000</licids>
