@@ -9,16 +9,30 @@ from __builtin__ import str
 if __name__ == '__main__':
     pmcounters = {}
     pmcounters["round"] = 0
-    pmcounters[0] = [0, 0, 0, 0, 0, 0]
-    pmcounters[1] = [0, 0, 0, 0, 0, 0]
-    pmcounters[2] = [0, 0, 0, 0, 0, 0]
-    pmcounters[3] = [0, 0, 0, 0, 0, 0]
-    pmcounters[4] = [0, 0, 0, 0, 0, 0]
-    pmcounters[5] = [0, 0, 0, 0, 0, 0]
-    pmcounters[6] = [0, 0, 0, 0, 0, 0]
-    pmcounters[7] = [0, 0, 0, 0, 0, 0]
     
-    j = 0
+    counters = {}
+    
+    counters[0] = [0, 0, 0, 0, 0, 0]
+    counters[1] = [0, 0, 0, 0, 0, 0]
+    counters[2] = [0, 0, 0, 0, 0, 0]
+    counters[3] = [0, 0, 0, 0, 0, 0]
+    counters[4] = [0, 0, 0, 0, 0, 0]
+    counters[5] = [0, 0, 0, 0, 0, 0]
+    counters[6] = [0, 0, 0, 0, 0, 0]
+    counters[7] = [0, 0, 0, 0, 0, 0]
+    
+    pmcounters["counter"] = counters
+    
+    o = 0
+    while(o < 24):
+        print 'round: ' + pmcounters["round"]
+        for k, v in pmcounters["counter"].iteritems():
+            print str(k) + ": " + str(v)
+        
+        
+        o += 1
+    
+    ''''j = 0
     while(True):
         i = pmcounters["round"]
         p = pmcounters[0][0]
@@ -44,4 +58,4 @@ if __name__ == '__main__':
     k = 22
     print ' ' * (7- len(str(k))) + str(k) + ' | ' + ' ' * (11 - len(str(v[0]))) + str(v[0]) + ' | ' + ' ' * (10 - len(str(v[1]))) + str(v[1]) + ' | ' + ' ' * (14 - len(str(v[2]))) + str(v[2]) + ' | ' + ' ' * (13 - len(str(v[3]))) + str(v[3]) + ' | ' +  ' ' * (20 - len(str(v[4]))) + str(v[4]) + ' | ' + ' ' * (23 - len(str(v[5]))) + str(v[5])
     
-    #print "Channel | sentPackets | sentOctets | droppedPackets | droppedOctets | sentTunnelCreateReqs | successfulTunnelCreates"[115]
+    #print "Channel | sentPackets | sentOctets | droppedPackets | droppedOctets | sentTunnelCreateReqs | successfulTunnelCreates"[115]'''

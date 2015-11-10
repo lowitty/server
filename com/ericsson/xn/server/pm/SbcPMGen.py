@@ -36,7 +36,7 @@ class SbcPMHolder():
     def updatePMCounters(self, mapCounter, iRound = None):
         lock.acquire()
         self.pmcounters["counter"] = mapCounter
-        if(iRound):
+        if(iRound is not None):
             self.pmcounters["round"] = iRound
         lock.release()
     
@@ -54,8 +54,10 @@ class SbcPMWriter(threading.Thread):
             min = tNow.minute
             sec = tNow.second
             if((min + 1) % 5 == 0 and sec < 35 and sec >= 30):
+            #if(True):
                 sbcPMlogger.info('About 30 seconds that the minutes will be multiples of 5, will simulate to update the counters.')
                 originalMap = self.pmHoler.getPMCounters()
+                sbcPMlogger.info('Dic of counters: ' + str(originalMap))
                 counters = {}
                 r = originalMap['round']
                 mapCounter = originalMap['counter']
