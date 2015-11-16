@@ -1,8 +1,11 @@
 eclipse.preferences.version=1
 encoding//com/ericsson/xn/server/common/CommonFunc.py=utf-8
 encoding//com/ericsson/xn/server/common/CusProtocols.py=utf-8
+encoding//com/ericsson/xn/server/globargvs/globalarguments.py=utf-8
 encoding//com/ericsson/xn/server/handler/OcgsSetHandler.py=utf-8
 encoding//com/ericsson/xn/server/parser/OcgsParser.py=utf-8
+encoding//com/ericsson/xn/server/pm/SbcPMGen.py=utf-8
 encoding//com/ericsson/xn/server/prop/PyProperties.py=utf-8
 encoding//tmp/sshsimpleserver.py=utf-8
+encoding//tmp/test.py=utf-8
 encoding/startserver.py=utf-8

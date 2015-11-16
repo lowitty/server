@@ -5,7 +5,7 @@ Created on Aug 24, 2015
 @author: lowitty
 '''
 #This will try to init the logger
-import sys, os, platform
+import sys, os, platform, time
 import logging
 from logging.handlers import RotatingFileHandler
 log_formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(module)s %(funcName)s(%(lineno)d) %(message)s')
@@ -49,7 +49,8 @@ else:
 
 sys.path.insert(0, os.path.join(pardir, libstype))
 
-
+from com.ericsson.xn.server.globargvs import globalarguments
+from com.ericsson.xn.server.pm.SbcPMGen import SbcPMHolder, SbcPMWriter
 from com.ericsson.xn.server.common.CommonFunc import TwRealm
 from com.ericsson.xn.server.common.CusProtocols import SshCusProtocol
 from com.ericsson.xn.server.common.CommonFunc import TwFactory
@@ -63,48 +64,57 @@ from com.ericsson.xn.server.prop.PyProperties import Properties
 publicKey = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAGEArzJx8OYOnJmzf4tfBEvLi8DVPrJ3/c9k2I/Az64fxjHf9imyRJbixtQhlH9lfNjUIx+4LmrJH5QNRsFporcHDKOTwTTYLh5KmRpslkYHRivcJSkbh/C+BR3utDS555mV'
 
 if __name__ == '__main__':
-    if(len(sys.argv) < 3):
-        server_log.critical('Please feed the node type and node configuration name as parameter.')
-    else:
-        cfg_path = pardir + os.path.sep + 'config' + os.path.sep + str(sys.argv[2]).strip()
-        if(not os.path.isdir(cfg_path) or not os.path.isfile(cfg_path + os.path.sep + str(sys.argv[2]).strip() + ".properties")):
-            server_log.error('The configuration file that you have specified does not exist!')
+    try:
+        if(len(sys.argv) < 3):
+            server_log.critical('Please feed the node type and node configuration name as parameter.')
         else:
-            cfg_file = os.path.normpath(cfg_path + os.path.sep + str(sys.argv[2]).strip() + ".properties")
-            server_log.info('Get properties from the configuration file: ' + cfg_file + '. ')
-            p = Properties(cfg_file)
-            
-            #username = p.getProperty('username')
-            #password = p.getProperty('password')
-            
-            host = p.getProperty('host')
-            portno = p.getProperty('port')
-            
-            #if(username is None or password is None or host is None or portno is None):
-            #    server_log.error('The configuration file: ' + cfg_file + " need to provide username, password, host and port information.")
-                
-            if(host is None or portno is None):
-                server_log.error('The configuration file: ' + cfg_file + " need to provide host and port information.")
+            cfg_path = pardir + os.path.sep + 'config' + os.path.sep + str(sys.argv[2]).strip()
+            if(not os.path.isdir(cfg_path) or not os.path.isfile(cfg_path + os.path.sep + str(sys.argv[2]).strip() + ".properties")):
+                server_log.error('The configuration file that you have specified does not exist!')
             else:
-                try:
-                    iPort = int(portno)
-                except Exception as e:
-                    server_log.warning('Unable to parse port NO. to integer, will use 22 as default port NO. msg: ' + e.args)
-                    iPort = 22
+                cfg_file = os.path.normpath(cfg_path + os.path.sep + str(sys.argv[2]).strip() + ".properties")
+                server_log.info('Get properties from the configuration file: ' + cfg_file + '. ')
+                p = Properties(cfg_file)
                 
-                portal = portal.Portal(TwRealm(SshCusProtocol))
+                #username = p.getProperty('username')
+                #password = p.getProperty('password')
                 
-                #passwdDB = InMemoryUsernamePasswordDatabaseDontUse()
-                #server_log.info('Add user with username: ' + username + ", password: " + password + ".")
-                #passwdDB.addUser(username, password)
+                host = p.getProperty('host')
+                portno = p.getProperty('port')
                 
-                passwdDB = FilePasswordDB(pardir + os.path.sep + "passwd" + os.path.sep + "passwddbfile")
-                
-                sshDB = SSHPublicKeyChecker(InMemorySSHKeyDB({'user': [keys.Key.fromString(data=publicKey)]}))
-                portal.registerChecker(passwdDB)
-                portal.registerChecker(sshDB)
-                TwFactory.portal = portal
-                server_log.debug('Bind server listener at port: ' + str(iPort) + ' and bind to host: ' + host + '.')
-                reactor.listenTCP(interface=host, port=iPort, factory=TwFactory())
-                server_log.debug('Try to start the server.')
-                reactor.run()
+                #if(username is None or password is None or host is None or portno is None):
+                #    server_log.error('The configuration file: ' + cfg_file + " need to provide username, password, host and port information.")
+                    
+                if(host is None or portno is None):
+                    server_log.error('The configuration file: ' + cfg_file + " need to provide host and port information.")
+                else:
+                    if('sbc' == str(sys.argv[1]).strip()):
+                        globalarguments.SBC_PM_Holder = SbcPMHolder()
+                        threadSbcPM = SbcPMWriter(globalarguments.SBC_PM_Holder)
+                        threadSbcPM.start()
+                    
+                    try:
+                        iPort = int(portno)
+                    except Exception as e:
+                        server_log.warning('Unable to parse port NO. to integer, will use 22 as default port NO. msg: ' + e.args)
+                        iPort = 22
+                    
+                    portal = portal.Portal(TwRealm(SshCusProtocol))
+                    
+                    #passwdDB = InMemoryUsernamePasswordDatabaseDontUse()
+                    #server_log.info('Add user with username: ' + username + ", password: " + password + ".")
+                    #passwdDB.addUser(username, password)
+                    
+                    passwdDB = FilePasswordDB(pardir + os.path.sep + "passwd" + os.path.sep + "passwddbfile")
+                    
+                    sshDB = SSHPublicKeyChecker(InMemorySSHKeyDB({'user': [keys.Key.fromString(data=publicKey)]}))
+                    portal.registerChecker(passwdDB)
+                    portal.registerChecker(sshDB)
+                    TwFactory.portal = portal
+                    server_log.debug('Bind server listener at port: ' + str(iPort) + ' and bind to host: ' + host + '.')
+                    reactor.listenTCP(interface=host, port=iPort, factory=TwFactory())
+                    server_log.debug('Try to start the server.')
+                    reactor.run()
+    except KeyboardInterrupt:
+        server_log.warn('User press try to terminate the program, I am going to exit now!')
+        print "**************************************************************************"
