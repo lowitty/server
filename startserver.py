@@ -17,7 +17,12 @@ pardir = os.path.dirname(os.path.abspath(__file__))
 log_dir = pardir + os.path.sep + 'logs'
 if(not os.path.isdir(log_dir)):
     os.mkdir(log_dir)
+
 log_file = log_dir + os.path.sep + 'server.log'
+if('sbc' == str(sys.argv[1]).strip()):
+    log_file = log_dir + os.path.sep + 'sbc-simulator.log'
+elif('ocgs' == str(sys.argv[1]).strip()):
+    log_file = log_dir + os.path.sep + 'ocgas-simulator.log'
 
 
 
