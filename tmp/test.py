@@ -6,8 +6,12 @@ Created on 2015年11月9日
 '''
 import time
 from __builtin__ import str
+from datetime import datetime, timedelta
 if __name__ == '__main__':
-    pmcounters = {}
+    t = datetime.now()
+    print t
+    print t + timedelta(minutes = 1)
+    '''pmcounters = {}
     pmcounters["round"] = 0
     
     counters = {}
@@ -30,7 +34,7 @@ if __name__ == '__main__':
             print str(k) + ": " + str(v)
         
         
-        o += 1
+        o += 1'''
     
     ''''j = 0
     while(True):

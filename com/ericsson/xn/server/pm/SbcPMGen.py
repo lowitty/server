@@ -72,6 +72,14 @@ class SbcPMWriter(threading.Thread):
                 if(r > 11):
                     r = 0
                 self.pmHoler.updatePMCounters(counters, r)
+                
+                nowTime = datetime.now()
+                t1 = nowTime + timedelta(minutes = 1)
+                t2 = nowTime + timedelta(minutes = 6)
+                msg = t1.strftime('%Y-%m-%d %H:%M') + ' to ' + t2.strftime('%H:%M')
+                
+                sbcPMlogger.info(msg + ', PM counters are: ' + str(self.pmHoler.getCounters()))
+                
                 deltaSec = 5 - (datetime.now().second % 5)
                 time.sleep(deltaSec)
             else:
