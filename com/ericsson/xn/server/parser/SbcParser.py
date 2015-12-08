@@ -69,7 +69,7 @@ class SbcNodeInfo():
         return self.node
     
     
-nodeInfoInstance = SbcNodeInfo('/Users/lowitty/git/server/config/sbc/sbc_node.xml')
+'''nodeInfoInstance = SbcNodeInfo('/Users/lowitty/git/server/config/sbc/sbc_node.xml')
 node = nodeInfoInstance.getNodeInfoMap()
-i = 1
+i = 1'''
     

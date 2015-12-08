@@ -4,13 +4,33 @@ Created on 2015年11月9日
 
 @author: lowitty
 '''
-import time
+import time, re, copy
 from __builtin__ import str
 from datetime import datetime, timedelta
+from xml.etree import ElementTree as ET
+
 if __name__ == '__main__':
-    strs = "as"
-    if(strs):
-        print 'yeah'
+    et = ET.parse('/home/lowitty/git/server/config/sbc/sbc_node0.xml')
+    '''cs = et.findall('./channel')
+    c = copy.deepcopy(cs[0])
+    c.find('./licId').text = 'licNew'
+    c.find('./localIp').text = '1.1.1.1'
+    c.find('./localTcpPort').text = '1111'
+    c.find('./remoteIp').text = '2.2.2.2'
+    c.find('./remoteTcpPort').text = '2222'
+    
+    et.getroot().append(c)
+    et.write('/home/lowitty/git/server/config/sbc/sbc_node1.xml', encoding='utf-8', xml_declaration=True, method='xml')'''
+    channel = ET.Element('channel')
+    ET.SubElement(channel, 'licId').text = 'licNew'
+    ET.SubElement(channel, 'localIp').text = '1.1.1.1'
+    ET.SubElement(channel, 'localPort').text = '1111'
+    ET.SubElement(channel, 'remoteIp').text = '2.2.2.2'
+    ET.SubElement(channel, 'remotePort').text = '2222'
+    et.getroot().append(channel)
+    et.write('/home/lowitty/git/server/config/sbc/sbc_node1.xml', encoding='utf-8', xml_declaration=True, method='xml')
+    
+    
     ''''t = datetime.now()
     print t
     print t + timedelta(minutes = 1)'''

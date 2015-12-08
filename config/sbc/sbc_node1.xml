@@ -25,4 +25,4 @@
 		<remoteIp>10.185.127.90</remoteIp>
 		<remoteTcpPort>30001</remoteTcpPort>
 	</channel>
-</node>
+<channel><licId>licNew</licId><localIp>1.1.1.1</localIp><localPort>1111</localPort><remoteIp>2.2.2.2</remoteIp><remotePort>2222</remotePort></channel></node>
