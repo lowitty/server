@@ -8,9 +8,12 @@ import time
 from __builtin__ import str
 from datetime import datetime, timedelta
 if __name__ == '__main__':
-    t = datetime.now()
+    strs = "as"
+    if(strs):
+        print 'yeah'
+    ''''t = datetime.now()
     print t
-    print t + timedelta(minutes = 1)
+    print t + timedelta(minutes = 1)'''
     '''pmcounters = {}
     pmcounters["round"] = 0
     
