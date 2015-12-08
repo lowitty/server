@@ -8,10 +8,13 @@ Created on Aug 24, 2015
 import sys, os, platform, time
 import logging
 from logging.handlers import RotatingFileHandler
+from macpath import pardir
 log_formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(module)s %(funcName)s(%(lineno)d) %(message)s')
 
 #get the root directory of the parent folder
 pardir = os.path.dirname(os.path.abspath(__file__))
+if(pardir not in sys.path):
+    sys.path.insert(0, pardir)
 
 
 log_dir = pardir + os.path.sep + 'logs'
