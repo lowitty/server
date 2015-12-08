@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<node>
+	<state>CONFIGURED</state>
+	<neId>BGF01</neId>
+	<nextHopIp>10.166.89.97</nextHopIp>
+	<vlanId>150</vlanId>
+	<portLocation>0</portLocation>
+	<tos>0</tos>
+	<pbits>0</pbits>
+	<checkTime>30</checkTime>
+	<channel>
+		<channelId>0</channelId>
+		<licId>LIC</licId>
+		<localIp>10.166.89.100</localIp>
+		<localTcpPort>30004</localTcpPort>
+		<remoteIp>10.185.127.90</remoteIp>
+		<remoteTcpPort>30001</remoteTcpPort>
+	</channel>
+	<channel>
+		<channelId>1</channelId>
+		<licId>LIC</licId>
+		<localIp>10.166.89.100</localIp>
+		<localTcpPort>30004</localTcpPort>
+		<remoteIp>10.185.127.90</remoteIp>
+		<remoteTcpPort>30001</remoteTcpPort>
+	</channel>
+</node>
