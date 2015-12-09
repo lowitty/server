@@ -10,6 +10,8 @@ from twisted.conch import recvline
 import sys, os
 from com.ericsson.xn.server.prop.PyProperties import Properties
 from com.ericsson.xn.server.parser.OcgsParser import OcgsNodeInfo
+from com.ericsson.xn.server.parser.SbcParser import SbcNodeInfo
+from com.ericsson.xn.server.handler.SbcSetHandler import SbcSetOperations
 from com.ericsson.xn.server.handler.OcgsSetHandler import OcgsSetValue, OcgsLicAddRemove
 from com.ericsson.xn.server.globargvs import globalarguments
 #from com.ericsson.xn.server.pm.SbcPMGen import SbcPMHolder, SbcPMWriter
@@ -40,7 +42,7 @@ class SshCusProtocol(recvline.HistoricRecvLine):
             self.sbcPMHolder = globalarguments.SBC_PM_Holder
             self.sbcmode = 0
             self.sbcprops = p
-            pass
+            self.xmlPath = self.pardir  + 'config' + os.path.sep + str(sys.argv[2]).strip() + os.path.sep + str(sys.argv[2]).strip() + '_node.xml'
     
     def connectionMade(self):
         recvline.HistoricRecvLine.connectionMade(self)
@@ -101,6 +103,16 @@ class SshCusProtocol(recvline.HistoricRecvLine):
                 self.sbcmode = 0
             self.showPrompt()
         elif(2 == self.sbcmode):
+            sbcHandler = SbcSetOperations(line, self.xmlPath)
+            returnStrs = sbcHandler.getActionResult()
+            for line in returnStrs:
+                self.terminal.write(line + '\n')
+            self.showPrompt()
+            
+            '''if(line.startwith('get_stat')):
+                froid = line.split()[1]
+                
+            
             if('get_stat 2' == line):
                 if(self.sbcPMHolder is not None):
                     licID = 2
@@ -114,7 +126,7 @@ class SshCusProtocol(recvline.HistoricRecvLine):
             elif('exit' == line.lower()):
                 self.sbcmode = 0
                 self.prompt = self.sbcprops.getProperty('prompt')
-            self.showPrompt()
+            self.showPrompt()'''
             #self.terminal.write(' ' * (7- len(str(k))) + str(k) + + ' | ' + ' ' * (11 - len(repr(v[0]))) + repr(v[0]) + '\n')
             
 

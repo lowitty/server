@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 from xml.etree import ElementTree as ET
 
 if __name__ == '__main__':
-    print sys.path
+    #print sys.path
     '''et = ET.parse('/home/lowitty/git/server/config/sbc/sbc_node0.xml')
     channel = ET.Element('channel')
     ET.SubElement(channel, 'licId').text = 'licNew'
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     ''''t = datetime.now()
     print t
     print t + timedelta(minutes = 1)'''
-    '''pmcounters = {}
+    pmcounters = {}
     pmcounters["round"] = 0
     
     counters = {}
@@ -52,7 +52,7 @@ if __name__ == '__main__':
     
     pmcounters["counter"] = counters
     
-    o = 0
+    '''o = 0
     while(o < 24):
         print 'round: ' + pmcounters["round"]
         for k, v in pmcounters["counter"].iteritems():
@@ -61,7 +61,7 @@ if __name__ == '__main__':
         
         o += 1'''
     
-    ''''j = 0
+    j = 0
     while(True):
         i = pmcounters["round"]
         p = pmcounters[0][0]

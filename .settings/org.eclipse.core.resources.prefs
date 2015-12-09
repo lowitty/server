@@ -8,6 +8,7 @@ encoding//com/ericsson/xn/server/parser/OcgsParser.py=utf-8
 encoding//com/ericsson/xn/server/parser/SbcParser.py=utf-8
 encoding//com/ericsson/xn/server/pm/SbcPMGen.py=utf-8
 encoding//com/ericsson/xn/server/prop/PyProperties.py=utf-8
+encoding//libsDarwin/Crypto/Cipher/DES3.py=utf-8
 encoding//tmp/sshsimpleserver.py=utf-8
 encoding//tmp/test.py=utf-8
 encoding/startserver.py=utf-8
