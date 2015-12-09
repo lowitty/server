@@ -236,7 +236,7 @@ class SbcSetOperations():
                             self.writeBack2XmlFile()
                             self.returnStr.append('OPERATION SUCCESSFUL - VPP: 0')
                             self.returnStr.append('OPERATION SUCCESSFUL - VPP: 1')
-                            logSbcHander.info('ACTIVE INTERFACE SUCCESSFULLY.')
+                            logSbcHander.info('R SUCCESSFULLY.')
                         except Exception as e:
                             msg = ('OPERATION FAILED DUE TO Write Back To XML File Failed, ERROR: ' + str(e)).upper()
                             self.returnStr.append(msg)
