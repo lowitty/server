@@ -4,7 +4,7 @@ Created on 2015年11月9日
 
 @author: lowitty
 '''
-import logging
+import logging, os, random
 sbcPMlogger = logging.getLogger('server.SBCPM')
 
 import threading, time
@@ -44,8 +44,15 @@ class SbcPMWriter(threading.Thread):
     def __init__(self, pmHolderInstance):
         threading.Thread.__init__(self)
         self.stopThread = False
+        filePath = os.path.dirname(os.path.abspath(__file__))
+        #/com/ericsson/xn/server/pm
+        sep = os.path.sep
+        self.sep = sep
+        packagePath = sep + 'com' + sep + 'ericsson' + sep + 'xn' + sep + 'server' + sep + 'pm'
+        self.parPath = filePath.split(packagePath)[0]
+        
         self.pmHoler = pmHolderInstance
-        sbcPMlogger.info('The thread which simulate to increase the SBC counter started.')
+        sbcPMlogger.info('SBCPMGEN started.')
         pass
     
     def run(self):
@@ -55,8 +62,36 @@ class SbcPMWriter(threading.Thread):
             sec = tNow.second
             if((min + 1) % 5 == 0 and sec < 35 and sec >= 30):
             #if(True):
-                sbcPMlogger.info('About 30 seconds that the minutes will be multiples of 5, will simulate to update the counters.')
-                originalMap = self.pmHoler.getPMCounters()
+                sbcPMlogger.info('About 30 seconds that the minutes will be multiples of 5, will simulate to update the counters, also random the next period logs.')
+                try:
+                    f = open(self.parPath + self.sep + 'config' + self.sep + 'sbc' + self.sep + 'sbc_log.x', 'r')
+                    lines = f.readlines()
+                    f.close()
+                    lenth = len(lines)
+                    intsRandom = sorted(random.sample(range(0, lenth), random.randint(0, lenth)))
+                    sbcPMlogger.info(str(intsRandom))
+                    newLines = []
+                    tStart = tNow + timedelta(seconds = -270)
+                    for ir in intsRandom:
+                        tStampt = tStart + timedelta(seconds = 24 * ir)
+                        newLines.append('[' + tStampt.strftime('%Y-%m-%d %H:%M:%S') + '.' + str(tStampt.microsecond % 1000) + '] ' + lines[ir].strip() + '\n')
+                    nowFile = self.parPath + self.sep + 'config' + self.sep + 'sbc' + self.sep + 'sbc_log.now'
+                    lock.acquire()
+                    open(nowFile, 'w').close()
+                    f = open(nowFile, 'w')
+                    f.writelines(newLines)
+                    f.flush()
+                    f.close()
+                    lock.release()
+                    nowTime = datetime.now()
+                    t1 = nowTime + timedelta(minutes = 1)
+                    t2 = nowTime + timedelta(minutes = 6)
+                    msg = t1.strftime('%Y-%m-%d %H:%M') + ' to ' + t2.strftime('%H:%M')
+                    sbcPMlogger.warn(msg + ', logs are: ' + '||'.join([k.strip() for k in newLines]))
+                except Exception as e:
+                    sbcPMlogger.error('ERROR: ' + str(e))
+                
+                '''originalMap = self.pmHoler.getPMCounters()
                 sbcPMlogger.info('Dic of counters: ' + str(originalMap))
                 counters = {}
                 r = originalMap['round']
@@ -78,7 +113,7 @@ class SbcPMWriter(threading.Thread):
                 t2 = nowTime + timedelta(minutes = 6)
                 msg = t1.strftime('%Y-%m-%d %H:%M') + ' to ' + t2.strftime('%H:%M')
                 
-                sbcPMlogger.info(msg + ', PM counters are: ' + str(self.pmHoler.getCounters()))
+                sbcPMlogger.info(msg + ', PM counters are: ' + str(self.pmHoler.getCounters()))'''
                 
                 deltaSec = 5 - (datetime.now().second % 5)
                 time.sleep(deltaSec)

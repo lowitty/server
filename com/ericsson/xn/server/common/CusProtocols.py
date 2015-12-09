@@ -43,6 +43,7 @@ class SshCusProtocol(recvline.HistoricRecvLine):
             self.sbcmode = 0
             self.sbcprops = p
             self.xmlPath = self.pardir  + 'config' + os.path.sep + str(sys.argv[2]).strip() + os.path.sep + str(sys.argv[2]).strip() + '_node.xml'
+            self.logPath = self.pardir  + 'config' + os.path.sep + str(sys.argv[2]).strip() + os.path.sep + str(sys.argv[2]).strip() + '_log.now'
     
     def connectionMade(self):
         recvline.HistoricRecvLine.connectionMade(self)
@@ -103,7 +104,7 @@ class SshCusProtocol(recvline.HistoricRecvLine):
                 self.sbcmode = 0
             self.showPrompt()
         elif(2 == self.sbcmode):
-            sbcHandler = SbcSetOperations(line, self.xmlPath)
+            sbcHandler = SbcSetOperations(line, self.xmlPath, self.logPath)
             returnStrs = sbcHandler.getActionResult()
             for line in returnStrs:
                 self.terminal.write(line + '\n')

@@ -40,6 +40,7 @@ server_log.addHandler(log_handler)
 
 if(len(sys.argv) > 3 and 'consolelog' == sys.argv[3]):
     console_handler = logging.StreamHandler()
+    console_handler.setFormatter(log_formatter)
     console_handler.setLevel(logging.DEBUG)
     server_log.addHandler(console_handler)
 

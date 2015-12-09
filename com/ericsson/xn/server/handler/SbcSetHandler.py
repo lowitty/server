@@ -16,11 +16,12 @@ logSbcHander.info('Python version is: ' + str(version))
 
 class SbcSetOperations():
     
-    def __init__(self, line, xmlPath):
+    def __init__(self, line, xmlPath, logPath):
         self.returnStr = []
-        self.avaiableSetCMDs = ['tcp_channel', 'li_activate', 'li_deactivate', 'pm_update', 'get_stat', 'get_config']
+        self.avaiableSetCMDs = ['tcp_channel', 'li_activate', 'li_deactivate', 'pm_update', 'get_stat', 'get_config', 'get_appl_trace']
         self.xmlPath = xmlPath
-        self.line = xmlPath
+        self.logPath = logPath
+        self.line = line
         self.er = None
         #pkg_path = 'com' + os.path.sep + 'ericsson' + os.path.sep + 'xn' + os.path.sep + 'server' + os.path.sep + 'handler'
         #self.pardir = os.path.dirname(os.path.abspath(__file__)).split(pkg_path)[0]
@@ -32,18 +33,20 @@ class SbcSetOperations():
         except Exception as e:
             logSbcHander.error('Read the XML as DOM failed, Error Info: ' + str(e))
         if(self.checkCmd()):
-            if(self.line.startwith('tcp_channel add')):
+            if(self.line.startswith('tcp_channel add')):
                 self.addChannel()
-            elif(self.line.startwith('tcp_channel remove')):
+            elif(self.line.startswith('tcp_channel remove')):
                 self.removeChannel()
-            elif(self.line.startwith('li_activate')):
+            elif(self.line.startswith('li_activate')):
                 self.liActive()
-            elif(self.line.startwith('li_deactivate')):
+            elif(self.line.startswith('li_deactivate')):
                 self.liDeactive()
-            elif(self.line.startwith('pm_update')):
+            elif(self.line.startswith('pm_update')):
                 self.pmUpdate()
-            elif(self.line.startwith('get_config')):
+            elif(self.line.startswith('get_config')):
                 self.getConfig()
+            elif(self.line.startswith('get_appl_trace')):
+                self.getApplTrace()
             else:
                 msg = 'OPERATION FAILED DUE TO COMMAND NOT SUPPORT.'
                 self.returnStr.append(msg)
@@ -91,19 +94,19 @@ class SbcSetOperations():
                         self.returnStr.append(msg)
                         logSbcHander.error(msg)
                     else:
+                        cmds = {}
                         for index in range(4, 14, 2):
-                            cmds = {}
                             cmds[lineSplit[index].lower().strip()[1:]] = lineSplit[index + 1].strip()
                         
-                        if(cmds.has_key('licid') and cmds.has_key('localip') and cmds.has_key('localtcpport') and cmds.has_key('remoteip') and cmds.has_key('remotetcpport')):
+                        if(cmds.has_key('licid') and cmds.has_key('localip') and cmds.has_key('localport') and cmds.has_key('remoteip') and cmds.has_key('remoteport')):
                             pat = '^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
                             prog = re.compile(pat)
                             res0 = prog.match(cmds['localip'])
                             res1 = prog.match(cmds['remoteip'])
                             if(res0 and res1):
                                 try:
-                                    lPort = int(cmds['localtcpport'])
-                                    rPort = int(cmds['remotetcpport'])
+                                    lPort = int(cmds['localport'])
+                                    rPort = int(cmds['remoteport'])
                                 except Exception as e:
                                     #Local port or Remote port is not number.
                                     msg = 'OPERATION FAILED DUE TO PORT IS NOT NUMBER.'
@@ -113,12 +116,26 @@ class SbcSetOperations():
                                     #Can check if IP already in other channels, will not check in this version.
                                     try:
                                         newChannel = ElementTree.Element('channel')
-                                        ElementTree.SubElement(newChannel, 'channelId').text = lineSplit[3]
-                                        ElementTree.SubElement(newChannel, 'licId').text = cmds['licid']
-                                        ElementTree.SubElement(newChannel, 'localIp').text = cmds['localip']
-                                        ElementTree.SubElement(newChannel, 'localTcpPort').text = cmds['localtcpport']
-                                        ElementTree.SubElement(newChannel, 'remoteIp').text = cmds['remoteip']
-                                        ElementTree.SubElement(newChannel, 'remoteTcpPort').text = cmds['remotetcpport']
+                                        channelId = ElementTree.SubElement(newChannel, 'channelId')
+                                        channelId.text = lineSplit[3]
+                                        channelId.tail = "\n\t\t"
+                                        licid = ElementTree.SubElement(newChannel, 'licId')
+                                        licid.text = cmds['licid']
+                                        licid.tail = "\n\t\t"
+                                        localIp = ElementTree.SubElement(newChannel, 'localIp')
+                                        localIp.text = cmds['localip']
+                                        localIp.tail = "\n\t\t"
+                                        localTcpPort = ElementTree.SubElement(newChannel, 'localTcpPort')
+                                        localTcpPort.text = cmds['localport']
+                                        localTcpPort.tail = "\n\t\t"
+                                        remoteIp = ElementTree.SubElement(newChannel, 'remoteIp')
+                                        remoteIp.text = cmds['remoteip']
+                                        remoteIp.tail = "\n\t\t"
+                                        remoteTcpPort = ElementTree.SubElement(newChannel, 'remoteTcpPort')
+                                        remoteTcpPort.text = cmds['remoteport']
+                                        remoteTcpPort.tail = "\n\t\t"
+                                        newChannel.tail = "\n\t\t"
+                                        newChannel.text = "\n\t\t"
                                         self.er.getroot().append(newChannel)
                                         self.writeBack2XmlFile()
                                     except Exception as e:
@@ -353,7 +370,11 @@ class SbcSetOperations():
                 self.returnStr.append('\t-pbits:\t\t' + node['nodeParas']['pbits'])
                 self.returnStr.append('\t-checkTime:\t\t' + node['nodeParas']['checkTime'])
                 self.returnStr.append('')
-                for k, v in node['channels']:
+                
+                sortedKeys = sorted(node['channels'].keys())
+                for k in sortedKeys:
+                    #for k, v in node['channels'].iteritems():
+                    v = node['channels'][k]
                     self.returnStr.append('VPP: 0 tcpChannelId: ' + k + ' config: SET vpp state: CONFIGURED lastReturnCode: 0 lastReturnMsg: <VPP: 0>')
                     self.returnStr.append('VPP: 1 tcpChannelId: ' + k + ' config: SET vpp state: CONFIGURED lastReturnCode: 0 lastReturnMsg: <VPP: 1>') 
                     self.returnStr.append('\t-licId:\t\t' + v['licId'])
@@ -363,6 +384,35 @@ class SbcSetOperations():
                     self.returnStr.append('\t-remoteTcpPort:\t\t' + v['remoteTcpPort'])
                     self.returnStr.append('')
                 self.returnStr.append('No of TCP channels: ' + str(len(node['channels'])))
+                self.returnStr.append('')
+    
+    def getApplTrace(self):
+        global lock
+        lineSplit = self.line.split()
+        nodeInfoInstance = SbcNodeInfo(self.xmlPath)
+        node = nodeInfoInstance.getNodeInfoMap()
+        if(2 != len(lineSplit)):
+            msg = 'OPERATION FAILED DUE TO COMMAND FORMAT IS WRONG.'
+            self.returnStr.append(msg)
+            logSbcHander.error(msg)
+        else:
+            if(lineSplit[1] != node['nodeParas']['froID']):
+                msg = 'OPERATION FAILED DUE TO FROID MISMATCH.'
+                self.returnStr.append(msg)
+                logSbcHander.error(msg)
+            else:
+                try:
+                    lock.acquire()
+                    f = open(self.logPath, 'r')
+                    lines = f.readlines()
+                    f.close()
+                    lock.release()
+                    self.returnStr = [k.strip() for k in lines]
+                    logSbcHander.info('SBC GET LOG SUCCESSFULLY.')
+                except Exception as e:
+                    msg = "OPERATION FAILED DUE TO ERROR: " + str(e).upper()
+                    self.returnStr.append(msg)
+                    logSbcHander.error(msg)
     
     def writeBack2XmlFile(self):
         global version, lock
@@ -374,4 +424,5 @@ class SbcSetOperations():
         lock.release()
             
     def getActionResult(self):
-        return self.returnStr
+        encodedStr = [k.encode('utf-8') for k in self.returnStr]
+        return encodedStr
