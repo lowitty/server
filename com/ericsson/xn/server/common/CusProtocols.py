@@ -89,6 +89,7 @@ class SshCusProtocol(recvline.HistoricRecvLine):
         
     def handler_sbc(self, line):
         protocol_log.info('Current mode is: ' + str(self.sbcmode))
+        protocol_log.info('Current commands is: ' + str(line))
         if(0 == self.sbcmode):
             protocol_log.info('Mode is 1: ' + 'lhsh ' + self.sbcprops.getProperty('SMN') + self.sbcprops.getProperty('APN') + '00 li_enter PRC')
             if('lhsh ' + self.sbcprops.getProperty('SMN') + self.sbcprops.getProperty('APN') + '00 li_enter PRC' == line):
@@ -104,11 +105,15 @@ class SshCusProtocol(recvline.HistoricRecvLine):
                 self.sbcmode = 0
             self.showPrompt()
         elif(2 == self.sbcmode):
-            sbcHandler = SbcSetOperations(line, self.xmlPath, self.logPath)
-            returnStrs = sbcHandler.getActionResult()
-            for line in returnStrs:
-                self.terminal.write(line + '\n')
-            self.showPrompt()
+            if('exit' == line.lower()):
+                self.sbcmode = 0
+                self.prompt = self.sbcprops.getProperty('prompt')
+            else:
+                sbcHandler = SbcSetOperations(line, self.xmlPath, self.logPath)
+                returnStrs = sbcHandler.getActionResult()
+                for line in returnStrs:
+                    self.terminal.write(line + '\n')
+                self.showPrompt()
             
             '''if(line.startwith('get_stat')):
                 froid = line.split()[1]

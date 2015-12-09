@@ -1,6 +1,8 @@
 #encoding=utf-8
 '''
 Created on 2015年11月9日
+tcp_channel add 2 4 -licId LIC1 -localIp 10.4.3.163 -localPort 30003  -remoteIp 10.4.2.51 -remotePort 30003
+
 
 @author: lowitty
 '''
@@ -10,7 +12,10 @@ from datetime import datetime, timedelta
 from xml.etree import ElementTree as ET
 
 if __name__ == '__main__':
-    
+    for i in range(1, -2):
+        print "HELLO"
+        
+    print len('li_activate 2 -neId SBC -key 1F18DC9387E3AB8F -nextHopIp 10.166.89.97 -vlanId 150 -portLocation 0 -dscp 0 -pbits 0 -checkTime 30'.split())
     
     
     

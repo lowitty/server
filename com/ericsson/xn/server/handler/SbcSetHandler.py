@@ -47,6 +47,8 @@ class SbcSetOperations():
                 self.getConfig()
             elif(self.line.startswith('get_appl_trace')):
                 self.getApplTrace()
+            elif(self.line.startswith('get_stat')):
+                self.getStat()
             else:
                 msg = 'OPERATION FAILED DUE TO COMMAND NOT SUPPORT.'
                 self.returnStr.append(msg)
@@ -55,7 +57,26 @@ class SbcSetOperations():
             msg = 'OPERATION FAILED DUE TO COMMAND NOT SUPPORT.'
             self.returnStr.append(msg)
             logSbcHander.error(msg)
-            
+    
+    def getStat(self):
+        lineSplit = self.line.split()
+        nodeInfoInstance = SbcNodeInfo(self.xmlPath)
+        node = nodeInfoInstance.getNodeInfoMap()
+        if(lineSplit[1] != node['nodeParas']['froID']):
+            msg = 'OPERATION FAILED DUE TO FROID MISMATCH.'
+            self.returnStr.append(msg)
+            logSbcHander.error(msg)
+        else:
+            froID = node['nodeParas']['froID']
+            sortedKeys = sorted(node['channels'].keys())
+            self.returnStr.append('LIC ID: ' + str(froID))
+            self.returnStr.append('Channel | sentPackets | sentOctets | droppedPackets | droppedOctets | sentTunnelCreateReqs | successfulTunnelCreates')
+            for k in sortedKeys:
+                v = node['channels'][k]
+                #' ' * (7- len(str(k))) + str(k) + ' | ' + ' ' * (11 - len(str(v[0]))) + str(v[0]) + ' | ' + ' ' * (10 - len(str(v[1]))) + str(v[1]) + ' | ' + ' ' * (14 - len(str(v[2]))) + str(v[2]) + ' | ' + ' ' * (13 - len(str(v[3]))) + str(v[3]) + ' | ' +  ' ' * (20 - len(str(v[4]))) + str(v[4]) + ' | ' + ' ' * (23 - len(str(v[5]))) + str(v[5]) + '\n'
+                self.returnStr.append(' ' * (7 - len(k)) + str(k) + ' | ' + ' ' * (11 - len(v['c1'])) + str(v['c1']) + ' | ' + ' ' * (10 - len(v['c2'])) + str(v['c2']) + ' | ' + ' ' * (14 - len(v['c3'])) + str(v['c3']) + ' | ' + ' ' * (13 - len(v['c4'])) + str(v['c4']) + ' | ' + ' ' * (20 - len(v['c5'])) + str(v['c5']) + ' | ' + ' ' * (23 - len(v['c6'])) + str(v['c6']))
+            logSbcHander.info('GET COUNTER SUCCESSFULLY.')
+    
     def checkCmd(self):
         if(self.line.split()[0].strip() not in self.avaiableSetCMDs):
             return False
@@ -84,8 +105,12 @@ class SbcSetOperations():
                 if(newChannelID < 0 or newChannelID > 63):
                     isChannelIDValid = False
                 
-                if(node['channels'].has_key(lineSplit[3]) or (not isChannelIDValid)):
-                    msg = 'OPERATION FAILED DUE TO CHANNEL ID EXIST OR NOT IN [0, 63].'
+                if(node['channels'].has_key(lineSplit[3]) or (not isChannelIDValid) or len(node['channels']) > 7):
+                    msg = 'OPERATION FAILED DUE TO CHANNEL ID EXIST OR NOT IN [0, 63] OR ALREADY 8 CHANNELS.'
+                    self.returnStr.append(msg)
+                    logSbcHander.error(msg)
+                elif('CONFIGURED' != node['nodeParas']['state']):
+                    msg = 'OPERATION FAILED DUE TO CANNOT ADD CHANNEL WHEN INTERFACE IS CLOSED .'
                     self.returnStr.append(msg)
                     logSbcHander.error(msg)
                 else:
@@ -134,6 +159,26 @@ class SbcSetOperations():
                                         remoteTcpPort = ElementTree.SubElement(newChannel, 'remoteTcpPort')
                                         remoteTcpPort.text = cmds['remoteport']
                                         remoteTcpPort.tail = "\n\t\t"
+                                        
+                                        c1 = ElementTree.SubElement(newChannel, 'c1')
+                                        c1.text = '0'
+                                        c1.tail = "\n\t\t"
+                                        c2 = ElementTree.SubElement(newChannel, 'c2')
+                                        c2.text = '0'
+                                        c2.tail = "\n\t\t"
+                                        c3 = ElementTree.SubElement(newChannel, 'c3')
+                                        c3.text = '0'
+                                        c3.tail = "\n\t\t"
+                                        c4 = ElementTree.SubElement(newChannel, 'c4')
+                                        c4.text = '0'
+                                        c4.tail = "\n\t\t"
+                                        c5 = ElementTree.SubElement(newChannel, 'c5')
+                                        c5.text = '0'
+                                        c5.tail = "\n\t\t"
+                                        c6 = ElementTree.SubElement(newChannel, 'c6')
+                                        c6.text = '0'
+                                        c6.tail = "\n\t\t"
+                                        
                                         newChannel.tail = "\n\t\t"
                                         newChannel.text = "\n\t\t"
                                         self.er.getroot().append(newChannel)
@@ -205,7 +250,7 @@ class SbcSetOperations():
         lineSplit = self.line.split()
         nodeInfoInstance = SbcNodeInfo(self.xmlPath)
         node = nodeInfoInstance.getNodeInfoMap()
-        if(2 != len(lineSplit)):
+        if(18 != len(lineSplit)):
             msg = 'OPERATION FAILED DUE TO COMMAND FORMAT IS WRONG.'
             self.returnStr.append(msg)
             logSbcHander.error(msg)
@@ -241,17 +286,22 @@ class SbcSetOperations():
                 self.returnStr.append(msg)
                 logSbcHander.error(msg)
             else:
-                if('NOT_CONFIGURED' != node['nodeParas']['state']):
-                    try:
-                        self.er.find('./state').text = 'NOT_CONFIGURED'
-                        self.writeBack2XmlFile()
-                        self.returnStr.append('OPERATION SUCCESSFUL - VPP: 0')
-                        self.returnStr.append('OPERATION SUCCESSFUL - VPP: 1')
-                        logSbcHander.info('ACTIVE INTERFACE SUCCESSFULLY.')
-                    except Exception as e:
-                        msg = ('OPERATION FAILED DUE TO Write Back To XML File Failed, ERROR: ' + str(e)).upper()
-                        self.returnStr.append(msg)
-                        logSbcHander.error(msg)
+                if(len(node['channels']) < 1):
+                    msg = 'OPERATION FAILED DUE TO CANNOT CLOSE INTERFACE WHEN CHANELLS EXIST ON NODE.'
+                    self.returnStr.append(msg)
+                    logSbcHander.error(msg)
+                else:
+                    if('NOT_CONFIGURED' != node['nodeParas']['state']):
+                        try:
+                            self.er.find('./state').text = 'NOT_CONFIGURED'
+                            self.writeBack2XmlFile()
+                            self.returnStr.append('OPERATION SUCCESSFUL - VPP: 0')
+                            self.returnStr.append('OPERATION SUCCESSFUL - VPP: 1')
+                            logSbcHander.info('ACTIVE INTERFACE SUCCESSFULLY.')
+                        except Exception as e:
+                            msg = ('OPERATION FAILED DUE TO Write Back To XML File Failed, ERROR: ' + str(e)).upper()
+                            self.returnStr.append(msg)
+                            logSbcHander.error(msg)
     
     def pmUpdate(self):
         pass

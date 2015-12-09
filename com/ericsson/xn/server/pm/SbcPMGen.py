@@ -4,8 +4,10 @@ Created on 2015年11月9日
 
 @author: lowitty
 '''
-import logging, os, random
+import logging, os, random, sys
 sbcPMlogger = logging.getLogger('server.SBCPM')
+from com.ericsson.xn.server.parser.SbcParser import SbcNodeInfo
+from xml.etree import ElementTree as ET
 
 import threading, time
 from datetime import datetime, timedelta
@@ -53,6 +55,7 @@ class SbcPMWriter(threading.Thread):
         
         self.pmHoler = pmHolderInstance
         sbcPMlogger.info('SBCPMGEN started.')
+        self.updateSBCCounters()
         pass
     
     def run(self):
@@ -88,6 +91,7 @@ class SbcPMWriter(threading.Thread):
                     t2 = nowTime + timedelta(minutes = 6)
                     msg = t1.strftime('%Y-%m-%d %H:%M') + ' to ' + t2.strftime('%H:%M')
                     sbcPMlogger.warn(msg + ', logs are: ' + '||'.join([k.strip() for k in newLines]))
+                    self.updateSBCCounters()
                 except Exception as e:
                     sbcPMlogger.error('ERROR: ' + str(e))
                 
@@ -119,6 +123,51 @@ class SbcPMWriter(threading.Thread):
                 time.sleep(deltaSec)
             else:
                 time.sleep(5)
+    def updateSBCCounters(self):
+        xmlPath = self.parPath + self.sep + 'config' + self.sep + 'sbc' + self.sep + 'sbc_node.xml'
+        #insNode = SbcNodeInfo(xmlPath)
+        #node = insNode.getNodeInfoMap()
+        et = ET.parse(xmlPath)
+        tNow = datetime.now()
+        r = (tNow + timedelta(seconds = 30)).minute / 5 - 1
+        firEle = self.getFirstEle(r)
+        cMap = {}
+        channels = et.findall('./channel')
+        for channel in channels:
+            k = int(channel.find('./channelId').text)
+            nk = k % 8
+            cMap[k] = []
+            c1 = str((firEle + r + 1) * (nk + 1) * 1)
+            c2 = str((firEle + r + 1) * (nk + 1) * 2)
+            c3 = str((firEle + r + 1) * (nk + 1) * 3)
+            c4 = str((firEle + r + 1) * (nk + 1) * 4)
+            c5 = str((firEle + r + 1) * (nk + 1) * 5)
+            c6 = str((firEle + r + 1) * (nk + 1) * 6)
+            channel.find('./c1').text = c1
+            channel.find('./c2').text = c2
+            channel.find('./c3').text = c3
+            channel.find('./c4').text = c4
+            channel.find('./c5').text = c5
+            channel.find('./c6').text = c6
+            cMap[k].append(c1)
+            cMap[k].append(c2)
+            cMap[k].append(c3)
+            cMap[k].append(c4)
+            cMap[k].append(c5)
+            cMap[k].append(c6)
+        versionTuple = sys.version_info[:2]
+        version = '.'.join(repr(v) for v in versionTuple)
+        lock.acquire()
+        if('2.7' == version):
+            et.write(xmlPath, encoding='utf-8', xml_declaration=True, method='xml')
+        else:
+            et.write(xmlPath, encoding='utf-8')
+        lock.release()
+        
+        t1 = tNow + timedelta(minutes = 1)
+        t2 = tNow + timedelta(minutes = 6)
+        msg = t1.strftime('%Y-%m-%d %H:%M') + ' to ' + t2.strftime('%H:%M')
+        sbcPMlogger.info(msg + ', Counters: ' + str(cMap))
     
     def stop(self):
         self.stopThread = True
