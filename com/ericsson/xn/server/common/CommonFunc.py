@@ -1,10 +1,11 @@
-#encoding=utf-8
+# encoding=utf-8
 '''
 Created on Aug 24, 2015
 
 @author: lowitty
 '''
 import logging
+
 logCommonFunc = logging.getLogger('server.CommonFunc')
 
 from twisted.cred import portal
@@ -28,6 +29,7 @@ pSTqy7c3a2AScC/YyOwkDaICHnnD3XyjMwIxALRzl0tQEKMXs6hH8ToUdlLROCrP
 EhQ0wahUTCk1gKA4uPD6TMTChavbh4K63OvbKg==
 -----END RSA PRIVATE KEY-----"""
 
+
 class TwAvatar(avatar.ConchUser):
     implements(conchinterfaces.ISession)
 
@@ -35,7 +37,7 @@ class TwAvatar(avatar.ConchUser):
         avatar.ConchUser.__init__(self)
         self.username = username
         self.protocol = protocol
-        self.channelLookup.update({'session':session.SSHSession})
+        self.channelLookup.update({'session': session.SSHSession})
 
     def openShell(self, protocol):
         serverProtocol = insults.ServerProtocol(self.protocol, self)
@@ -50,27 +52,29 @@ class TwAvatar(avatar.ConchUser):
 
     def closed(self):
         pass
-    
+
     def windowChanged(self, argvs):
         logCommonFunc.warn('Terminal window size has been changed!')
         pass
-    
+
     def eofReceived(self):
         logCommonFunc.warn('User manually close the ssh clent!')
         pass
-    
+
+
 class TwRealm:
     implements(portal.IRealm)
-    
+
     def __init__(self, protocol):
         self.protocol = protocol
-    
+
     def requestAvatar(self, avatarId, mind, *interfaces):
         if conchinterfaces.IConchUser in interfaces:
             return interfaces[0], TwAvatar(avatarId, self.protocol), lambda: None
         else:
             raise Exception, "No supported interfaces found."
-        
+
+
 class TwFactory(factory.SSHFactory):
     publicKeys = {
         'ssh-rsa': keys.Key.fromString(data=publicKey)

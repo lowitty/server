@@ -16,12 +16,12 @@
 		<localTcpPort>30004</localTcpPort>
 		<remoteIp>10.185.127.90</remoteIp>
 		<remoteTcpPort>30001</remoteTcpPort>
-		<c1>10</c1>
-		<c2>20</c2>
-		<c3>30</c3>
-		<c4>40</c4>
-		<c5>50</c5>
-		<c6>60</c6>
+		<c1>28</c1>
+		<c2>56</c2>
+		<c3>84</c3>
+		<c4>112</c4>
+		<c5>140</c5>
+		<c6>168</c6>
 	</channel>
 	<channel>
 		<channelId>1</channelId>
@@ -30,12 +30,12 @@
 		<localTcpPort>30004</localTcpPort>
 		<remoteIp>10.185.127.90</remoteIp>
 		<remoteTcpPort>30001</remoteTcpPort>
-		<c1>20</c1>
-		<c2>40</c2>
-		<c3>60</c3>
-		<c4>80</c4>
-		<c5>100</c5>
-		<c6>120</c6>
+		<c1>56</c1>
+		<c2>112</c2>
+		<c3>168</c3>
+		<c4>224</c4>
+		<c5>280</c5>
+		<c6>336</c6>
 	</channel>
 <channel>
 		<channelId>4</channelId>
@@ -44,11 +44,11 @@
 		<localTcpPort>30003</localTcpPort>
 		<remoteIp>10.4.2.51</remoteIp>
 		<remoteTcpPort>30003</remoteTcpPort>
-		<c1>50</c1>
-		<c2>100</c2>
-		<c3>150</c3>
-		<c4>200</c4>
-		<c5>250</c5>
-		<c6>300</c6>
+		<c1>140</c1>
+		<c2>280</c2>
+		<c3>420</c3>
+		<c4>560</c4>
+		<c5>700</c5>
+		<c6>840</c6>
 		</channel>
 		</node>

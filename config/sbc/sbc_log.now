@@ -1,0 +1,8 @@
+[2015-12-10 15:30:27.613] BgfApplLiVppAdapterImpl.cc:12 dpRsp() DEBUG: DPCI_LI_GET_STAT - stat reply received
+[2015-12-10 15:30:51.613] BgfApplLiFroAdapterImpl.cc:13 sendStatResponseToFro() DEBUG: sendStatResponseToFro: resultCode 0
+[2015-12-10 15:31:15.613] BgfApplLiVppAdapterImpl.cc:14 dpRsp() DEBUG: DPCI_LI_GET_STAT - stat reply received
+[2015-12-10 15:31:39.613] BgfApplLiFroAdapterImpl.cc:15 sendStatResponseToFro() DEBUG: sendStatResponseToFro: resultCode 0
+[2015-12-10 15:32:03.613] BgfApplLiVppAdapterImpl.cc:16 dpRsp() DEBUG: DPCI_LI_GET_STAT - stat reply received
+[2015-12-10 15:32:27.613] BgfApplLiFroAdapterImpl.cc:17 sendStatResponseToFro() DEBUG: sendStatResponseToFro: resultCode 0
+[2015-12-10 15:33:39.613] BgfApplLiVppAdapterImpl.cc:20 dpRsp() DEBUG: DPCI_LI_GET_STAT - stat reply received
+[2015-12-10 15:34:03.613] BgfApplLiFroAdapterImpl.cc:21 sendStatResponseToFro() DEBUG: sendStatResponseToFro: resultCode 0
