@@ -94,13 +94,14 @@ if __name__ == '__main__':
                 portno = p.getProperty('port')
 
                 # if(username is None or password is None or host is None or portno is None):
-                # server_log.error('The configuration file: ' + cfg_file + " need to provide username, password, host and port information.")
+                # server_log.error('The configuration file: ' + cfg_file + " need to provide username, password, host
+                # and port information.")
 
-                if (host is None or portno is None):
+                if host is None or portno is None:
                     server_log.error(
                         'The configuration file: ' + cfg_file + " need to provide host and port information.")
                 else:
-                    if ('sbc' == str(sys.argv[1]).strip()):
+                    if 'sbc' == str(sys.argv[1]).strip():
                         globalarguments.SBC_PM_Holder = SbcPMHolder()
                         threadSbcPM = SbcPMWriter(globalarguments.SBC_PM_Holder)
                         threadSbcPM.start()
