@@ -1,2 +1,2 @@
 # server
-E Extendable server simulator
+E Extendable server simulator.
