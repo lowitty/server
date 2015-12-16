@@ -77,7 +77,7 @@ class SbcPMWriter(threading.Thread):
                     tStart = tNow + timedelta(seconds = -270)
                     for ir in intsRandom:
                         tStampt = tStart + timedelta(seconds = 24 * ir)
-                        newLines.append('[' + tStampt.strftime('%Y-%m-%d %H:%M:%S') + '.' + str(tStampt.microsecond % 1000) + '] ' + lines[ir].strip() + '\n')
+                        newLines.append('[' + tStampt.strftime('%Y-%m-%d %H:%M:%S') + '.' + str(tStampt.microsecond / 100) + '] ' + lines[ir].strip() + '\n')
                     nowFile = self.parPath + self.sep + 'config' + self.sep + 'sbc' + self.sep + 'sbc_log.now'
                     lock.acquire()
                     open(nowFile, 'w').close()
