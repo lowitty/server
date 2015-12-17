@@ -59,12 +59,12 @@ class SbcPMWriter(threading.Thread):
         pass
     
     def run(self):
-        while(not self.stopThread):
+        while not self.stopThread:
             tNow = datetime.now()
             min = tNow.minute
             sec = tNow.second
-            if((min + 1) % 5 == 0 and sec < 35 and sec >= 30):
-            #if(True):
+            if (min + 1) % 5 == 0 and 35 > sec >= 30:
+            # if(True):
                 sbcPMlogger.info('About 30 seconds that the minutes will be multiples of 5, will simulate to update the counters, also random the next period logs.')
                 try:
                     f = open(self.parPath + self.sep + 'config' + self.sep + 'sbc' + self.sep + 'sbc_log.x', 'r')
@@ -125,8 +125,8 @@ class SbcPMWriter(threading.Thread):
                 time.sleep(5)
     def updateSBCCounters(self):
         xmlPath = self.parPath + self.sep + 'config' + self.sep + 'sbc' + self.sep + 'sbc_node.xml'
-        #insNode = SbcNodeInfo(xmlPath)
-        #node = insNode.getNodeInfoMap()
+        # insNode = SbcNodeInfo(xmlPath)
+        # node = insNode.getNodeInfoMap()
         et = ET.parse(xmlPath)
         tNow = datetime.now()
         r = (tNow + timedelta(seconds = 30)).minute / 5 - 1
