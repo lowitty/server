@@ -117,6 +117,7 @@ class SshCusProtocol(recvline.HistoricRecvLine):
             if 'exit' == line.lower():
                 self.sbcmode = 0
                 self.prompt = self.sbcprops.getProperty('prompt')
+                self.showPrompt()
             else:
                 sbcHandler = SbcSetOperations(line, self.xmlPath, self.logPath)
                 returnStrs = sbcHandler.getActionResult()
