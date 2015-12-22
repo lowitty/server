@@ -286,7 +286,7 @@ class SbcSetOperations():
                 self.returnStr.append(msg)
                 logSbcHander.error(msg)
             else:
-                if(len(node['channels']) < 1):
+                if len(node['channels']) > 0:
                     msg = 'OPERATION FAILED DUE TO CANNOT CLOSE INTERFACE WHEN CHANELLS EXIST ON NODE.'
                     self.returnStr.append(msg)
                     logSbcHander.error(msg)

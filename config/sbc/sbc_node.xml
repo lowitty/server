@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <node>
 	<froID>2</froID>
-	<state>CONFIGURED</state>
+	<state>NOT_CONFIGURED</state>
 	<neId>BGF01</neId>
 	<nextHopIp>10.166.89.97</nextHopIp>
 	<vlanId>150</vlanId>
@@ -16,12 +16,12 @@
 		<localTcpPort>30004</localTcpPort>
 		<remoteIp>10.185.127.90</remoteIp>
 		<remoteTcpPort>30001</remoteTcpPort>
-		<c1>66</c1>
-		<c2>132</c2>
-		<c3>198</c3>
-		<c4>264</c4>
-		<c5>330</c5>
-		<c6>396</c6>
+		<c1>28</c1>
+		<c2>56</c2>
+		<c3>84</c3>
+		<c4>112</c4>
+		<c5>140</c5>
+		<c6>168</c6>
 	</channel>
 	<channel>
 		<channelId>1</channelId>
@@ -30,12 +30,12 @@
 		<localTcpPort>30004</localTcpPort>
 		<remoteIp>10.185.127.90</remoteIp>
 		<remoteTcpPort>30001</remoteTcpPort>
-		<c1>132</c1>
-		<c2>264</c2>
-		<c3>396</c3>
-		<c4>528</c4>
-		<c5>660</c5>
-		<c6>792</c6>
+		<c1>56</c1>
+		<c2>112</c2>
+		<c3>168</c3>
+		<c4>224</c4>
+		<c5>280</c5>
+		<c6>336</c6>
 	</channel>
 <channel>
 		<channelId>4</channelId>
@@ -44,11 +44,11 @@
 		<localTcpPort>30003</localTcpPort>
 		<remoteIp>10.4.2.51</remoteIp>
 		<remoteTcpPort>30003</remoteTcpPort>
-		<c1>330</c1>
-		<c2>660</c2>
-		<c3>990</c3>
-		<c4>1320</c4>
-		<c5>1650</c5>
-		<c6>1980</c6>
+		<c1>140</c1>
+		<c2>280</c2>
+		<c3>420</c3>
+		<c4>560</c4>
+		<c5>700</c5>
+		<c6>840</c6>
 		</channel>
 		</node>
